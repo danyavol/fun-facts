@@ -49,7 +49,9 @@ export const updateTotalFacts = onValueWritten(
                 const totalFactsRef = getDatabase().ref(`/totalFacts/${quizId}`);
                 const currentValue = (await totalFactsRef.get()).val();
                 const newValue = currentValue + difference;
-                await totalFactsRef.set(newValue < 0 ? 0 : newValue);
+
+                if (newValue <= 0) await totalFactsRef.remove();
+                else await totalFactsRef.set(newValue);
             })
         );
     }

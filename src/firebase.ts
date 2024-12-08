@@ -1,6 +1,4 @@
-import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getDatabase } from 'firebase/database'
+import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyAfh_tIRBkfM3z6XNY79OntXGhETLa5xSI',
@@ -10,13 +8,7 @@ const firebaseConfig = {
     storageBucket: 'fun-facts-2fa6e.firebasestorage.app',
     messagingSenderId: '1079857081515',
     appId: '1:1079857081515:web:5b11186d487e89ef6b5bee',
-}
+};
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig)
-
-// Initialize Firebase Authentication and get a reference to the service
-export const auth = getAuth(app)
-
-// Initialize Realtime Database and get a reference to the service
-export const database = getDatabase(app)
+initializeApp(firebaseConfig);

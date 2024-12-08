@@ -1,4 +1,4 @@
-import { getAuth, onAuthStateChanged, signInAnonymously, User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInAnonymously, User, GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
 
 export function getCurrentUser(): Promise<User> {
     console.log('start', new Date().getTime());
@@ -14,4 +14,11 @@ export function getCurrentUser(): Promise<User> {
             }
         });
     });
+}
+
+export async function signInViaGoogle() {
+    const provider = new GoogleAuthProvider();
+
+    const user = await getCurrentUser();
+    await linkWithPopup(user, provider);
 }

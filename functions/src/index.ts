@@ -31,7 +31,7 @@ export const updateTotalFacts = onValueWritten(
         } else if (data.before.exists() && !data.after.exists()) {
             // Fact was deleted
             differences.push({
-                quizId: data.after.val().quizId,
+                quizId: data.before.val().quizId,
                 difference: -1,
             });
         } else if (data.before.val().quizId !== data.after.val().quizId) {

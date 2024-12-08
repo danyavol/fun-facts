@@ -16,9 +16,6 @@ initializeApp();
 export const updateTotalFacts = onValueWritten(
     { ref: '/facts/{userId}/{factId}', region: 'europe-west1' },
     async ({ data }) => {
-        // Ignore edits
-        if (data.after.exists() && data.before.exists()) return;
-
         const differences: { quizId: number; difference: number }[] = [];
 
         // Find which quiz exactly was changed

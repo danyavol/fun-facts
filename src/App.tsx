@@ -1,71 +1,43 @@
 import './App.css';
-import { getDatabase, push, ref, onValue } from 'firebase/database';
 import { Button } from '@radix-ui/themes';
-import { getCurrentUser, signInViaGoogle } from './services/auth.service.ts';
-import { useEffect, useState } from 'react';
+import { useCreateQuiz, useQuizzesList } from './services/quizzes.service.ts';
+import { signInViaGoogle, useCurrentUser } from './services/auth.service.ts';
+import { useCreateFact } from './services/facts.service.ts';
 
 function App() {
-    const [facts, setFacts] = useState<any[]>([]);
-    const [totalFacts, setTotalFacts] = useState<number>(0);
-    const quizId = 1;
+    const { quizzes } = useQuizzesList();
+    const { createQuiz } = useCreateQuiz();
+    const { createFact } = useCreateFact();
+    const currentUser = useCurrentUser();
 
-    async function saveData() {
-        const user = await getCurrentUser();
-        return push(ref(getDatabase(), `facts/${user.uid}`), {
-            text: 'I was born in 21 century',
-            quizId: quizId,
-            createdAt: new Date().toISOString(),
-        });
-    }
-
-    useEffect(() => {
-        let unsubscribe1 = () => {};
-
-        (async () => {
-            const user = await getCurrentUser();
-            unsubscribe1 = onValue(
-                ref(getDatabase(), `facts/${user.uid}`),
-                (snapshot) => {
-                    const data = Object.entries(snapshot.val() ?? {}).map(([key, value]) => ({
-                        id: key,
-                        ...(value as object),
-                    }));
-                    setFacts(data);
-                },
-                (e) => console.log('error', e)
-            );
-        })();
-
-        const unsubscribe2 = onValue(
-            ref(getDatabase(), `totalFacts/${quizId}`),
-            (snapshot) => setTotalFacts(snapshot.val() ?? 0),
-            (e) => console.log('error', e)
-        );
-
-        return () => {
-            unsubscribe1();
-            unsubscribe2();
-        };
-    }, []);
-
-    async function googleSignIn() {
-        await signInViaGoogle();
-    }
-
+    // TODO: Issues with permissions in firebase
     return (
         <>
             <div>
-                <Button onClick={saveData}>Click me</Button>
+                <Button onClick={() => createQuiz({ name: 'Test quiz' })}>Create quiz</Button>
             </div>
-            Facts ({totalFacts}):
-            {facts.map((fact, index) => (
-                <div key={fact.id}>
-                    {index + 1}) {fact.text}
+
+            {!!quizzes.length && (
+                <div>
+                    <Button onClick={() => createFact({ text: 'Test quiz', quizId: quizzes[0].id })}>
+                        Create fact
+                    </Button>
+                </div>
+            )}
+
+            {currentUser?.isAnonymous && (
+                <div>
+                    <Button onClick={signInViaGoogle}>Sign in via google</Button>
+                </div>
+            )}
+
+            <h2>All quizzes:</h2>
+
+            {quizzes.map((quiz, index) => (
+                <div key={quiz.id}>
+                    {index + 1}) {quiz.name} ({quiz.id})
                 </div>
             ))}
-            <div>
-                <Button onClick={googleSignIn}>Sign in via google</Button>
-            </div>
         </>
     );
 }

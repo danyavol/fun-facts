@@ -46,12 +46,11 @@ export const updateTotalFacts = onValueWritten(
 
         await Promise.all(
             differences.map(async ({ quizId, difference }) => {
-                const totalFactsRef = getDatabase().ref(`/totalFacts/${quizId}`);
-                const currentValue = (await totalFactsRef.get()).val();
+                const totalFactsRef = getDatabase().ref(`/quizzes/${quizId}/totalFacts`);
+                const currentValue = (await totalFactsRef.get()).val() ?? 0;
                 const newValue = currentValue + difference;
 
-                if (newValue <= 0) await totalFactsRef.remove();
-                else await totalFactsRef.set(newValue);
+                await totalFactsRef.set(newValue < 0 ? 0 : newValue);
             })
         );
     }

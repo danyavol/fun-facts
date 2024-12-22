@@ -1,0 +1,11 @@
+.quiz {
+  background-color: var(--accent-2);
+  border-radius: var(--radius-2);
+  padding: var(--space-2);
+  box-shadow: var(--shadow-2);
+  &:hover {
+    box-shadow: var(--shadow-3);
+    background-color: var(--accent-3);
+    cursor: pointer;
+  }
+}

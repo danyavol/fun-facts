@@ -1,64 +1,102 @@
-import { getDatabase, onValue, push, ref, update, remove } from 'firebase/database';
+import {
+    addDoc,
+    collection,
+    doc,
+    onSnapshot,
+    getFirestore,
+    updateDoc,
+    deleteDoc,
+    query,
+    orderBy,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
 
-type RawQuiz = {
+type Quiz = {
+    id: string;
     name: string;
     ownerId: string;
-    totalFacts: number;
+    totalFacts?: number;
     createdAt: string;
     updatedAt: string;
-};
-
-type RawQuizzes = {
-    [quizId: string]: RawQuiz;
-};
-
-export type Quiz = RawQuiz & {
-    id: string;
 };
 
 export function useQuizzesList() {
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const unsubscribe = onValue(
-        ref(getDatabase(), `quizzes`),
-        (snapshot) => {
-            const rawData = snapshot.val() as RawQuizzes | null;
-            const data = Object.entries(rawData ?? {}).map(
-                ([key, value]): Quiz => ({
-                    id: key,
-                    ...value,
-                })
-            );
-            setQuizzes(data);
-            if (isLoading) setIsLoading(false);
-        },
-        (e) => console.error(e)
-    );
+    useEffect(() => {
+        const unsubscribe = onSnapshot(
+            query(collection(getFirestore(), `quizzes`), orderBy('createdAt', 'desc')),
+            (snapshot) => {
+                setQuizzes(
+                    snapshot.docs.map(
+                        (doc) =>
+                            ({
+                                id: doc.id,
+                                ...doc.data(),
+                            }) as Quiz
+                    )
+                );
+                setIsLoading(false);
+            },
+            (e) => {
+                console.error(e);
+                setIsLoading(false);
+            }
+        );
 
-    useEffect(() => () => unsubscribe(), [unsubscribe]);
+        return () => unsubscribe();
+    }, []);
 
     return { quizzes, isLoading };
 }
 
-export function useCreateQuiz() {
+export function useQuiz(quizId: string) {
+    const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(
+            doc(getFirestore(), `quizzes/${quizId}`),
+            (snapshot) => {
+                setQuiz({
+                    id: snapshot.id,
+                    ...snapshot.data(),
+                } as Quiz);
+                setIsLoading(false);
+            },
+            (e) => {
+                console.error(e);
+                setIsLoading(false);
+            }
+        );
+
+        return () => unsubscribe();
+    }, [quizId]);
+
+    return { quiz, isLoading };
+}
+
+export function useCreateQuiz() {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function createQuiz(params: { name: string }) {
         setIsLoading(true);
         const user = await getCurrentUser();
 
-        const quizData: Omit<RawQuizzes[string], 'totalFacts'> = {
+        const quizData: Omit<Quiz, 'totalFacts' | 'id'> = {
             ...params,
             ownerId: user.uid,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
 
-        await push(ref(getDatabase(), `quizzes`), quizData);
-        setIsLoading(false);
+        try {
+            await addDoc(collection(getFirestore(), `quizzes`), quizData);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return { createQuiz, isLoading };
@@ -70,12 +108,12 @@ export function useEditQuiz() {
     async function editQuiz(params: { id: string; name: string }) {
         setIsLoading(true);
 
-        const quizData: Partial<RawQuizzes[string]> = {
+        const quizData: Partial<Omit<Quiz, 'totalFacts' | 'id'>> = {
             name: params.name,
             updatedAt: new Date().toISOString(),
         };
 
-        await update(ref(getDatabase(), `quizzes/${params.id}`), quizData);
+        await updateDoc(doc(getFirestore(), `quizzes/${params.id}`), quizData);
         setIsLoading(false);
     }
 
@@ -87,7 +125,7 @@ export function useDeleteQuiz() {
 
     async function deleteQuiz(id: string) {
         setIsLoading(true);
-        await remove(ref(getDatabase(), `quizzes/${id}`));
+        await deleteDoc(doc(getFirestore(), `quizzes/${id}`));
         setIsLoading(false);
     }
 

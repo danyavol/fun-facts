@@ -1,20 +1,24 @@
-import { getDatabase, onValue, push, ref, update, remove } from 'firebase/database';
+import {
+    addDoc,
+    collection,
+    doc,
+    onSnapshot,
+    getFirestore,
+    updateDoc,
+    deleteDoc,
+    query,
+    where,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
 
-type RawFact = {
+type Fact = {
+    id: string;
     quizId: string;
+    ownerId: string;
     text: string;
     createdAt: string;
     updatedAt: string;
-};
-
-type RawFacts = {
-    [factId: string]: RawFact;
-};
-
-export type Fact = RawFact & {
-    id: string;
 };
 
 export function useQuizFacts(quizId: string) {
@@ -25,20 +29,19 @@ export function useQuizFacts(quizId: string) {
 
     (async () => {
         const user = await getCurrentUser();
-        unsubscribe = onValue(
-            ref(getDatabase(), `facts/${user.uid}`),
+        unsubscribe = onSnapshot(
+            query(collection(getFirestore(), `facts`), where('ownerId', '==', user.uid), where('quizId', '==', quizId)),
             (snapshot) => {
-                const rawData = snapshot.val() as RawFacts | null;
-                const data = Object.entries(rawData ?? {})
-                    .filter(([_, fact]) => fact.quizId === quizId)
-                    .map(
-                        ([key, value]): Fact => ({
-                            id: key,
-                            ...value,
-                        })
-                    );
-                setFacts(data);
-                if (isLoading) setIsLoading(false);
+                setFacts(
+                    snapshot.docs.map(
+                        (doc) =>
+                            ({
+                                id: doc.id,
+                                ...doc.data(),
+                            }) as Fact
+                    )
+                );
+                setIsLoading(false);
             },
             (e) => console.error(e)
         );
@@ -50,19 +53,20 @@ export function useQuizFacts(quizId: string) {
 }
 
 export function useCreateFact() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function createFact(params: { text: string; quizId: string }) {
         setIsLoading(true);
         const user = await getCurrentUser();
 
-        const factData: RawFact = {
+        const factData: Omit<Fact, 'id'> = {
             ...params,
+            ownerId: user.uid,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
 
-        await push(ref(getDatabase(), `facts/${user.uid}`), factData);
+        await addDoc(collection(getFirestore(), `facts`), factData);
         setIsLoading(false);
     }
 
@@ -70,18 +74,17 @@ export function useCreateFact() {
 }
 
 export function useEditFact() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function editFact(params: { id: string; text: string }) {
         setIsLoading(true);
-        const user = await getCurrentUser();
 
-        const factData: Partial<RawFact> = {
+        const factData: Partial<Fact> = {
             text: params.text,
             updatedAt: new Date().toISOString(),
         };
 
-        await update(ref(getDatabase(), `facts/${user.uid}/${params.id}`), factData);
+        await updateDoc(doc(getFirestore(), `facts/${params.id}`), factData);
         setIsLoading(false);
     }
 
@@ -89,12 +92,11 @@ export function useEditFact() {
 }
 
 export function useDeleteFact() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function deleteFact(id: string) {
         setIsLoading(true);
-        const user = await getCurrentUser();
-        await remove(ref(getDatabase(), `facts/${user.uid}/${id}`));
+        await deleteDoc(doc(getFirestore(), `facts/${id}`));
         setIsLoading(false);
     }
 

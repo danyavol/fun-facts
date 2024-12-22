@@ -52,7 +52,7 @@ export const updateTotalFacts = onDocumentWritten(
                 const currentValue = ((await quizRef.get()).data()?.['totalFacts'] as number) ?? 0;
                 const newValue = currentValue + difference;
 
-                await quizRef.set({ totalFacts: newValue < 0 ? 0 : newValue });
+                await quizRef.update({ totalFacts: newValue < 0 ? 0 : newValue });
             })
         );
     }

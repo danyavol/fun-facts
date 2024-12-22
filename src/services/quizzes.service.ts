@@ -121,7 +121,7 @@ export function useEditQuiz() {
 }
 
 export function useDeleteQuiz() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function deleteQuiz(id: string) {
         setIsLoading(true);

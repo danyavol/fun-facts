@@ -11,7 +11,7 @@ import { QuizPage } from './pages/quiz/quiz.page.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <Theme>
+        <Theme hasBackground={false}>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<QuizzesListPage />} />

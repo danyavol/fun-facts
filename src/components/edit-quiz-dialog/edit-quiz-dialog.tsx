@@ -1,8 +1,9 @@
-import { Button, Dialog } from '@radix-ui/themes';
+import { Button, Dialog, IconButton } from '@radix-ui/themes';
 import { Quiz, useEditQuiz } from '../../services/quizzes.service.ts';
 import { useEffect, useState } from 'react';
 import { QuizForm } from '../quiz-form/quiz-form.tsx';
 import { QuizFormData } from '../quiz-form/default-quiz-form-value.ts';
+import { Pencil2Icon } from '@radix-ui/react-icons';
 
 export function EditQuizButton({ quiz }: { quiz: Quiz }) {
     const [value, setValue] = useState<QuizFormData>({ name: quiz.name, answers: quiz.answers });
@@ -10,7 +11,6 @@ export function EditQuizButton({ quiz }: { quiz: Quiz }) {
     const { editQuiz, isLoading } = useEditQuiz();
 
     useEffect(() => {
-        console.log(123, quiz);
         setValue({ name: quiz.name, answers: quiz.answers });
     }, [quiz]);
 
@@ -22,7 +22,9 @@ export function EditQuizButton({ quiz }: { quiz: Quiz }) {
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger>
-                <Button>Edit quiz</Button>
+                <IconButton variant="ghost" size="2">
+                    <Pencil2Icon width="20" height="20" />
+                </IconButton>
             </Dialog.Trigger>
 
             <QuizForm

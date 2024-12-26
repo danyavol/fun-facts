@@ -2,7 +2,20 @@ html, body {
   margin: 0;
 }
 
+#root  {
+  background-image: url("/assets/background.svg");
+  background-size: 450px;
+  padding: var(--space-4);
+  box-sizing: border-box;
+}
+
 a {
   text-decoration: none;
   color: inherit;
+}
+
+.main-container {
+  background-color: var(--color-background);
+  border-radius: var(--radius-5);
+  box-shadow: var(--shadow-4);
 }

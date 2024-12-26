@@ -60,25 +60,25 @@ export function QuizForm({
 
     return (
         <Dialog.Content maxWidth="450px">
-            <Dialog.Title>{type == 'new' ? 'Create new quiz' : 'Edit quiz'}</Dialog.Title>
+            <Dialog.Title>{type == 'new' ? 'Создать новый квиз' : 'Изменить квиз'}</Dialog.Title>
 
             <Flex direction="column" gap="3" mb="4">
                 <label>
                     <Text as="div" size="2" mb="2" weight="bold">
-                        Name
+                        Название
                     </Text>
                     <TextField.Root
                         maxLength={60}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="Enter your quiz name"
+                        placeholder="Введи название квиза"
                     />
                 </label>
             </Flex>
 
             <Flex justify="between" mb="2">
                 <Text as="div" size="2" weight="bold">
-                    Quiz answers
+                    Имена участников (варианты ответов)
                 </Text>
                 <IconButton size="1" onClick={addAnswer}>
                     <PlusIcon />
@@ -91,7 +91,7 @@ export function QuizForm({
                             <TextField.Root
                                 value={answer}
                                 onChange={(e) => setAnswer(answerId, e.target.value)}
-                                placeholder={'Enter answer'}
+                                placeholder={'Введи ответ'}
                             />
                         </Box>
                         <IconButton size="1" variant="ghost" color="gray" mr="1" onClick={() => removeAnswer(answerId)}>
@@ -103,10 +103,10 @@ export function QuizForm({
 
             <Flex gap="3" mt="4" justify="end">
                 <Button variant="soft" color="gray" onClick={onCancel}>
-                    Cancel
+                    Отмена
                 </Button>
                 <Button loading={isLoading} disabled={!name || !answersValid()} onClick={submit}>
-                    Save
+                    Сохранить
                 </Button>
             </Flex>
         </Dialog.Content>

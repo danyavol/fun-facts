@@ -20,7 +20,21 @@ export type Quiz = {
     totalFacts?: number;
     createdAt: string;
     updatedAt: string;
+    status: 'open' | 'started' | 'ended';
 };
+
+export function getStatusName(status: Quiz['status']) {
+    switch (status) {
+        case 'open':
+            return 'Подготовка';
+        case 'started':
+            return 'Квиз начался!';
+        case 'ended':
+            return 'Квиз окончен';
+        default:
+            return status;
+    }
+}
 
 export function useQuizzesList() {
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -89,6 +103,7 @@ export function useCreateQuiz() {
         const quizData: Omit<Quiz, 'totalFacts' | 'id'> = {
             ...params,
             ownerId: user.uid,
+            status: 'open',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };

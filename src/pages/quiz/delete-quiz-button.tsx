@@ -1,7 +1,8 @@
-import { AlertDialog, Button, Flex } from '@radix-ui/themes';
+import { AlertDialog, Button, Flex, IconButton } from '@radix-ui/themes';
 import { useDeleteQuiz } from '../../services/quizzes.service.ts';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
+import { Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
 
 export function DeleteQuizButton({ quizId, name }: { quizId: string; name: string }) {
     const navigate = useNavigate();
@@ -18,22 +19,22 @@ export function DeleteQuizButton({ quizId, name }: { quizId: string; name: strin
     return (
         <AlertDialog.Root open={open} onOpenChange={setOpen}>
             <AlertDialog.Trigger>
-                <Button color="red">Delete quiz</Button>
+                <IconButton variant="ghost" size="2" color="red">
+                    <TrashIcon width="20" height="20" />
+                </IconButton>
             </AlertDialog.Trigger>
             <AlertDialog.Content maxWidth="450px">
-                <AlertDialog.Title>Delete quiz</AlertDialog.Title>
-                <AlertDialog.Description size="2">
-                    Are you sure you want to delete "{name}" quiz?
-                </AlertDialog.Description>
+                <AlertDialog.Title>Удалить квиз</AlertDialog.Title>
+                <AlertDialog.Description size="2">Ты уверен, что хочешь удалить "{name}" квиз?</AlertDialog.Description>
 
                 <Flex gap="3" mt="4" justify="end">
                     <AlertDialog.Cancel>
                         <Button variant="soft" color="gray">
-                            Cancel
+                            Отмена
                         </Button>
                     </AlertDialog.Cancel>
                     <Button variant="solid" color="red" loading={isLoading} onClick={deleteCurrentQuiz}>
-                        Delete
+                        Удалить
                     </Button>
                 </Flex>
             </AlertDialog.Content>

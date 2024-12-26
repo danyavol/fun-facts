@@ -18,7 +18,7 @@ export function CreateQuizButton() {
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger>
-                <Button>Create new quiz</Button>
+                <Button>Создать квиз</Button>
             </Dialog.Trigger>
 
             <QuizForm

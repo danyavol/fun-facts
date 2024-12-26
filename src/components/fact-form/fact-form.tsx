@@ -10,9 +10,17 @@ type FactFormProps = {
     onSubmit(form: FactFormData): void;
     isLoading?: boolean;
     disabled?: boolean;
+    readonlyForm?: boolean;
 };
 
-export function FactForm({ type, value, onSubmit, isLoading = false, disabled = false }: FactFormProps) {
+export function FactForm({
+    type,
+    value,
+    onSubmit,
+    isLoading = false,
+    disabled = false,
+    readonlyForm = false,
+}: FactFormProps) {
     const [text, setText] = useState(value.text);
 
     const hasChanges = text !== value.text;
@@ -20,7 +28,6 @@ export function FactForm({ type, value, onSubmit, isLoading = false, disabled = 
     const isSubmitDisabled = !isValid || !hasChanges || disabled;
 
     useEffect(() => {
-        console.log(99);
         setText(value.text);
     }, [value]);
 
@@ -29,12 +36,17 @@ export function FactForm({ type, value, onSubmit, isLoading = false, disabled = 
     }
 
     return (
-        <Flex direction="column" className={type === 'new' ? styles.newFact : ''}>
-            <TextArea value={text} onChange={(e) => setText(e.target.value)} placeholder="Enter some fact about you" />
+        <Flex direction="column">
+            <TextArea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Напиши что-нибудь о себе"
+                readOnly={readonlyForm}
+            />
             <Flex justify="end" mt="2">
-                {(!isSubmitDisabled || type === 'new') && (
+                {(hasChanges || type === 'new') && (
                     <Button onClick={submit} loading={isLoading} disabled={isSubmitDisabled}>
-                        {type == 'new' ? 'Create fact' : 'Save fact'}
+                        {type == 'new' ? 'Добавить факт' : 'Сохранить'}
                     </Button>
                 )}
             </Flex>

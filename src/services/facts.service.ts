@@ -37,7 +37,6 @@ export function useQuizFacts(quizId: string) {
                     where('quizId', '==', quizId)
                 ),
                 (snapshot) => {
-                    console.log(88);
                     setFacts(
                         snapshot.docs.map(
                             (doc) =>

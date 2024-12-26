@@ -12,9 +12,10 @@ import {
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
 
-type Quiz = {
+export type Quiz = {
     id: string;
     name: string;
+    answers: string[];
     ownerId: string;
     totalFacts?: number;
     createdAt: string;
@@ -81,7 +82,7 @@ export function useQuiz(quizId: string) {
 export function useCreateQuiz() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    async function createQuiz(params: { name: string }) {
+    async function createQuiz(params: { name: string; answers: string[] }) {
         setIsLoading(true);
         const user = await getCurrentUser();
 
@@ -103,13 +104,14 @@ export function useCreateQuiz() {
 }
 
 export function useEditQuiz() {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    async function editQuiz(params: { id: string; name: string }) {
+    async function editQuiz(params: { id: string; name: string; answers: string[] }) {
         setIsLoading(true);
 
         const quizData: Partial<Omit<Quiz, 'totalFacts' | 'id'>> = {
             name: params.name,
+            answers: params.answers,
             updatedAt: new Date().toISOString(),
         };
 

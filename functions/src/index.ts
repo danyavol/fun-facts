@@ -57,3 +57,5 @@ export const updateTotalFacts = onDocumentWritten(
         );
     }
 );
+
+// TODO: Populate totalFacts = 0 when new quiz created

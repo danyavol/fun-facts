@@ -25,29 +25,36 @@ export function useQuizFacts(quizId: string) {
     const [facts, setFacts] = useState<Fact[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    let unsubscribe = () => {};
+    useEffect(() => {
+        let unsubscribe = () => {};
 
-    (async () => {
-        const user = await getCurrentUser();
-        unsubscribe = onSnapshot(
-            query(collection(getFirestore(), `facts`), where('ownerId', '==', user.uid), where('quizId', '==', quizId)),
-            (snapshot) => {
-                setFacts(
-                    snapshot.docs.map(
-                        (doc) =>
-                            ({
-                                id: doc.id,
-                                ...doc.data(),
-                            }) as Fact
-                    )
-                );
-                setIsLoading(false);
-            },
-            (e) => console.error(e)
-        );
-    })();
+        (async () => {
+            const user = await getCurrentUser();
+            unsubscribe = onSnapshot(
+                query(
+                    collection(getFirestore(), `facts`),
+                    where('ownerId', '==', user.uid),
+                    where('quizId', '==', quizId)
+                ),
+                (snapshot) => {
+                    console.log(88);
+                    setFacts(
+                        snapshot.docs.map(
+                            (doc) =>
+                                ({
+                                    id: doc.id,
+                                    ...doc.data(),
+                                }) as Fact
+                        )
+                    );
+                    setIsLoading(false);
+                },
+                (e) => console.error(e)
+            );
+        })();
 
-    useEffect(() => () => unsubscribe(), []);
+        return unsubscribe;
+    }, []);
 
     return { facts, isLoading };
 }

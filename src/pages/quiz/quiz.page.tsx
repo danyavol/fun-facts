@@ -9,13 +9,13 @@ import { useEffect, useState } from 'react';
 import { FactFormData, getDefaultFactValue } from '../../components/fact-form/default-fact-form-value.ts';
 import {
     ArrowLeftIcon,
-    CaretLeftIcon,
     CheckCircledIcon,
     CrossCircledIcon,
     ExclamationTriangleIcon,
     InfoCircledIcon,
 } from '@radix-ui/react-icons';
 import { ruPluralText } from '../../utils/plural.ts';
+import { useCurrentUser } from '../../services/auth.service.ts';
 
 const maxFacts = 3;
 
@@ -28,6 +28,9 @@ export function QuizPage() {
     const { editFact, isLoading: isEditFactLoading } = useEditFact();
     const [currentLoadingFact, setCurrentLoadingFact] = useState<string | null>(null);
     const [newFact, setNewFact] = useState<FactFormData>(getDefaultFactValue());
+    const { isAdmin, user } = useCurrentUser();
+
+    const canEdit = isAdmin || quiz?.ownerId === user?.uid;
 
     useEffect(() => {
         if (!isEditFactLoading) {
@@ -73,7 +76,7 @@ export function QuizPage() {
                             <Heading>{quiz.name}</Heading>
                         </Box>
                     )}
-                    {quiz && (
+                    {quiz && canEdit && (
                         <Flex gap="4" justify="end" align="center">
                             <EditQuizButton quiz={quiz} />
                             <DeleteQuizButton quizId={quiz.id} name={quiz.name} />
@@ -115,23 +118,25 @@ export function QuizPage() {
                     </Callout.Root>
                 )}
 
-                <Callout.Root my="2" size="2">
-                    <Callout.Icon>
-                        <InfoCircledIcon />
-                    </Callout.Icon>
-                    <Callout.Text>
-                        Придумай что-нибудь интересное или необычное о себе. Во время квиза участники будут угадывать
-                        кому принадлежит факт. Поэтому не указывай своё имя и пол в фактах 😉. Пример:
-                        <Box mt="2">
-                            <strong>
-                                <em>
-                                    Люблю лошадей. В детстве занимался(ась) конным спортом. Есть своя лошадь по имени
-                                    Бэмби
-                                </em>
-                            </strong>
-                        </Box>
-                    </Callout.Text>
-                </Callout.Root>
+                {quiz?.status === 'open' && (
+                    <Callout.Root my="2" size="2">
+                        <Callout.Icon>
+                            <InfoCircledIcon />
+                        </Callout.Icon>
+                        <Callout.Text>
+                            Придумай что-нибудь интересное или необычное о себе. Во время квиза участники будут
+                            угадывать кому принадлежит факт. Поэтому не указывай своё имя и пол в фактах 😉. Пример:
+                            <Box mt="2">
+                                <strong>
+                                    <em>
+                                        Люблю лошадей. В детстве занимался(ась) конным спортом. Есть своя лошадь по
+                                        имени Бэмби
+                                    </em>
+                                </strong>
+                            </Box>
+                        </Callout.Text>
+                    </Callout.Root>
+                )}
 
                 {facts.length < maxFacts && quiz?.status === 'open' && (
                     <>

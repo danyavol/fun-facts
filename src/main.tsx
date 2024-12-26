@@ -8,6 +8,7 @@ import { Theme } from '@radix-ui/themes';
 
 import { QuizzesListPage } from './pages/quizzes-list/quizzes-list.page.tsx';
 import { QuizPage } from './pages/quiz/quiz.page.tsx';
+import { SignInPage } from './pages/sign-in/sign-in.page.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
                 <Routes>
                     <Route path="/" element={<QuizzesListPage />} />
                     <Route path="/quiz/:quizId" element={<QuizPage />} />
+                    <Route path="/login" element={<SignInPage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </BrowserRouter>

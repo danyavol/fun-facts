@@ -4,8 +4,7 @@ import {
     signInAnonymously,
     User,
     GoogleAuthProvider,
-    linkWithPopup,
-    signInWithCredential,
+    signInWithPopup,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
@@ -14,6 +13,7 @@ export function getCurrentUser(): Promise<User> {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
+                console.log();
                 unsubscribe();
                 resolve(user);
             } else {
@@ -25,12 +25,19 @@ export function getCurrentUser(): Promise<User> {
 
 export function useCurrentUser() {
     const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
     useEffect(() => {
         const auth = getAuth();
+        setIsLoading(true);
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
+                setIsLoading(false);
                 setUser(user);
+                user.getIdTokenResult().then((data) => {
+                    setIsAdmin(!!data.claims.admin);
+                });
             } else {
                 signInAnonymously(auth).then(() => {});
             }
@@ -39,19 +46,17 @@ export function useCurrentUser() {
         return () => unsubscribe();
     }, []);
 
-    return user;
+    return { user, isAdmin, isLoading };
 }
 
 export async function signInViaGoogle() {
-    const provider = new GoogleAuthProvider();
+    await signInWithPopup(getAuth(), new GoogleAuthProvider());
+}
 
-    const user = await getCurrentUser();
+export async function signInAnonymous() {
+    await signInAnonymously(getAuth());
+}
 
-    await linkWithPopup(user, provider).catch(async ({ customData: { _tokenResponse }, code }) => {
-        console.error('Account already exists');
-        if (code === 'auth/credential-already-in-use') {
-            // TODO: Fix it
-            await signInWithCredential(getAuth(), _tokenResponse);
-        }
-    });
+export async function signOut() {
+    await getAuth().signOut();
 }

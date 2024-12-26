@@ -1,7 +1,7 @@
 import { NavLink, useParams } from 'react-router';
 import { useCreateFact, useEditFact, useQuizFacts } from '../../services/facts.service.ts';
 import { getStatusName, useQuiz } from '../../services/quizzes.service.ts';
-import { Box, Button, Callout, Container, Flex, Heading, IconButton, Link, Text } from '@radix-ui/themes';
+import { Box, Callout, Container, Flex, Heading, IconButton, Link, Text } from '@radix-ui/themes';
 import { DeleteQuizButton } from './delete-quiz-button.tsx';
 import { EditQuizButton } from '../../components/edit-quiz-dialog/edit-quiz-dialog.tsx';
 import { FactForm } from '../../components/fact-form/fact-form.tsx';
@@ -22,8 +22,8 @@ const maxFacts = 3;
 export function QuizPage() {
     const params = useParams();
     const quizId = params.quizId || '';
-    const { quiz, isLoading: isQuizLoading } = useQuiz(quizId);
-    const { facts, isLoading: isFactsLoading } = useQuizFacts(quizId);
+    const { quiz } = useQuiz(quizId);
+    const { facts } = useQuizFacts(quizId);
     const { createFact, isLoading: isFactCreateLoading } = useCreateFact();
     const { editFact, isLoading: isEditFactLoading } = useEditFact();
     const [currentLoadingFact, setCurrentLoadingFact] = useState<string | null>(null);

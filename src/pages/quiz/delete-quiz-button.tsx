@@ -2,7 +2,7 @@ import { AlertDialog, Button, Flex, IconButton } from '@radix-ui/themes';
 import { useDeleteQuiz } from '../../services/quizzes.service.ts';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
-import { Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
+import { TrashIcon } from '@radix-ui/react-icons';
 
 export function DeleteQuizButton({ quizId, name }: { quizId: string; name: string }) {
     const navigate = useNavigate();

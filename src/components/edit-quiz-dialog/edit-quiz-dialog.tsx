@@ -1,4 +1,4 @@
-import { Button, Dialog, IconButton } from '@radix-ui/themes';
+import { Dialog, IconButton } from '@radix-ui/themes';
 import { Quiz, useEditQuiz } from '../../services/quizzes.service.ts';
 import { useEffect, useState } from 'react';
 import { QuizForm } from '../quiz-form/quiz-form.tsx';

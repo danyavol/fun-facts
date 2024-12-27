@@ -12,10 +12,11 @@ import {
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
 
-type Fact = {
+export type Fact = {
     id: string;
     quizId: string;
     ownerId: string;
+    imageUrl: string | null;
     text: string;
     createdAt: string;
     updatedAt: string;
@@ -53,7 +54,7 @@ export function useQuizFacts(quizId: string) {
         })();
 
         return unsubscribe;
-    }, []);
+    }, [quizId]);
 
     return { facts, isLoading };
 }
@@ -67,6 +68,7 @@ export function useCreateFact() {
 
         const factData: Omit<Fact, 'id'> = {
             ...params,
+            imageUrl: null,
             ownerId: user.uid,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -82,11 +84,14 @@ export function useCreateFact() {
 export function useEditFact() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    async function editFact(params: { id: string; text: string }) {
+    async function editFact(params: Partial<Pick<Fact, 'id' | 'text' | 'imageUrl'>>) {
         setIsLoading(true);
 
+        const paramsWithoutId = { ...params };
+        delete paramsWithoutId.id;
+
         const factData: Partial<Fact> = {
-            text: params.text,
+            ...paramsWithoutId,
             updatedAt: new Date().toISOString(),
         };
 

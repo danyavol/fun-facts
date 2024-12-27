@@ -86,12 +86,12 @@ export function QuizPage() {
                 </Flex>
 
                 {quiz && (
-                    <Flex justify="between" align="center">
+                    <Flex justify="between" align="center" gap="3">
                         <Flex align="center" gap="2">
                             <Text>Этап:</Text>
                             {isAdmin ? <QuizStatusSelect quiz={quiz} /> : <strong>{getStatusName(quiz.status)}</strong>}
                         </Flex>
-                        <Text>
+                        <Text align="right">
                             Всего фактов в квизе: <strong>{quiz.totalFacts ?? 0}</strong>
                         </Text>
                     </Flex>
@@ -166,6 +166,8 @@ export function QuizPage() {
                             disabled={currentLoadingFact !== fact.id && isEditFactLoading}
                             isLoading={currentLoadingFact === fact.id && isEditFactLoading}
                             onSubmit={(form) => editFactHandler(fact.id, form)}
+                            factId={fact.id}
+                            imageUrl={fact.imageUrl}
                         ></FactForm>
                     ))}
                     {!facts?.length && (

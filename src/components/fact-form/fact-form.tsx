@@ -1,6 +1,8 @@
 import { Button, Flex, TextArea, Text } from '@radix-ui/themes';
 import { FactFormData } from './default-fact-form-value.ts';
 import { useEffect, useState } from 'react';
+import { FactImage } from './fact-image.tsx';
+import styles from './fact-image.module.scss';
 
 type FactFormProps = {
     type: 'new' | 'edit';
@@ -9,6 +11,8 @@ type FactFormProps = {
     isLoading?: boolean;
     disabled?: boolean;
     readonlyForm?: boolean;
+    factId?: string;
+    imageUrl?: string | null;
 };
 
 export function FactForm({
@@ -18,6 +22,8 @@ export function FactForm({
     isLoading = false,
     disabled = false,
     readonlyForm = false,
+    factId,
+    imageUrl,
 }: FactFormProps) {
     const [text, setText] = useState(value.text);
     const [dirty, setDirty] = useState(false);
@@ -43,7 +49,9 @@ export function FactForm({
 
     return (
         <Flex direction="column">
+            {type === 'edit' && factId && <FactImage factId={factId} imageUrl={imageUrl} />}
             <TextArea
+                className={type === 'edit' ? styles.textAreaBelowImage : ''}
                 color={showTextError ? 'red' : undefined}
                 value={text}
                 onChange={(e) => {

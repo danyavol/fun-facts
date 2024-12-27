@@ -1,6 +1,6 @@
 import { NavLink, useParams } from 'react-router';
 import { useCreateFact, useEditFact, useQuizFacts } from '../../services/facts.service.ts';
-import { getStatusName, useQuiz } from '../../services/quizzes.service.ts';
+import { getStatusName, useQuiz } from '../../services/quizzes.service.tsx';
 import { Box, Callout, Container, Flex, Heading, IconButton, Link, Text } from '@radix-ui/themes';
 import { DeleteQuizButton } from './delete-quiz-button.tsx';
 import { EditQuizButton } from '../../components/edit-quiz-dialog/edit-quiz-dialog.tsx';
@@ -16,6 +16,7 @@ import {
 } from '@radix-ui/react-icons';
 import { ruPluralText } from '../../utils/plural.ts';
 import { useCurrentUser } from '../../services/auth.service.ts';
+import { QuizStatusSelect } from './quiz-status-select.tsx';
 
 const maxFacts = 3;
 
@@ -85,10 +86,11 @@ export function QuizPage() {
                 </Flex>
 
                 {quiz && (
-                    <Flex justify="between">
-                        <Text>
-                            Этап: <strong>{getStatusName(quiz.status)}</strong>
-                        </Text>
+                    <Flex justify="between" align="center">
+                        <Flex align="center" gap="2">
+                            <Text>Этап:</Text>
+                            {isAdmin ? <QuizStatusSelect quiz={quiz} /> : <strong>{getStatusName(quiz.status)}</strong>}
+                        </Flex>
                         <Text>
                             Всего фактов в квизе: <strong>{quiz.totalFacts ?? 0}</strong>
                         </Text>
@@ -126,7 +128,7 @@ export function QuizPage() {
                         <Callout.Text>
                             Придумай что-нибудь интересное или необычное о себе. Во время квиза участники будут
                             угадывать кому принадлежит факт. Поэтому не указывай своё имя и пол в фактах 😉. Пример:
-                            <Box mt="2">
+                            <Box as="span" mt="2">
                                 <strong>
                                     <em>
                                         Люблю лошадей. В детстве занимался(ась) конным спортом. Есть своя лошадь по

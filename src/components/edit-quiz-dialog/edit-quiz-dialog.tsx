@@ -1,5 +1,5 @@
 import { Dialog, IconButton } from '@radix-ui/themes';
-import { Quiz, useEditQuiz } from '../../services/quizzes.service.ts';
+import { Quiz, useEditQuiz } from '../../services/quizzes.service.tsx';
 import { useEffect, useState } from 'react';
 import { QuizForm } from '../quiz-form/quiz-form.tsx';
 import { QuizFormData } from '../quiz-form/default-quiz-form-value.ts';

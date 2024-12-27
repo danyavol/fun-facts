@@ -9,6 +9,7 @@ import {
     query,
     orderBy,
 } from 'firebase/firestore';
+import { Badge } from '@radix-ui/themes';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
 
@@ -26,11 +27,23 @@ export type Quiz = {
 export function getStatusName(status: Quiz['status']) {
     switch (status) {
         case 'open':
-            return 'Подготовка';
+            return (
+                <Badge color="amber" size="2" variant="solid">
+                    Подготовка
+                </Badge>
+            );
         case 'started':
-            return 'Квиз начался!';
+            return (
+                <Badge color="green" size="2" variant="solid">
+                    Квиз начался!
+                </Badge>
+            );
         case 'ended':
-            return 'Квиз окончен';
+            return (
+                <Badge color="red" size="2" variant="solid">
+                    Квиз окончен
+                </Badge>
+            );
         default:
             return status;
     }
@@ -121,17 +134,22 @@ export function useCreateQuiz() {
 export function useEditQuiz() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    async function editQuiz(params: { id: string; name: string; answers: string[] }) {
+    async function editQuiz(params: Partial<Pick<Quiz, 'id' | 'name' | 'answers' | 'status'>>) {
         setIsLoading(true);
 
+        const paramsWithoutId = { ...params };
+        delete paramsWithoutId.id;
+
         const quizData: Partial<Omit<Quiz, 'totalFacts' | 'id'>> = {
-            name: params.name,
-            answers: params.answers,
+            ...paramsWithoutId,
             updatedAt: new Date().toISOString(),
         };
 
-        await updateDoc(doc(getFirestore(), `quizzes/${params.id}`), quizData);
-        setIsLoading(false);
+        try {
+            await updateDoc(doc(getFirestore(), `quizzes/${params.id}`), quizData);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return { editQuiz, isLoading };
@@ -142,8 +160,11 @@ export function useDeleteQuiz() {
 
     async function deleteQuiz(id: string) {
         setIsLoading(true);
-        await deleteDoc(doc(getFirestore(), `quizzes/${id}`));
-        setIsLoading(false);
+        try {
+            await deleteDoc(doc(getFirestore(), `quizzes/${id}`));
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return { deleteQuiz, isLoading };

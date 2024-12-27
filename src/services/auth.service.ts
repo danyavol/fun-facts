@@ -13,7 +13,6 @@ export function getCurrentUser(): Promise<User> {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log();
                 unsubscribe();
                 resolve(user);
             } else {

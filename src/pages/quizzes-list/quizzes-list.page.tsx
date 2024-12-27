@@ -1,4 +1,4 @@
-import { getStatusName, useQuizzesList } from '../../services/quizzes.service.ts';
+import { getStatusName, useQuizzesList } from '../../services/quizzes.service.tsx';
 import { Box, Container, Flex, Heading, Separator, Spinner, Text } from '@radix-ui/themes';
 
 import styles from './quizzes-list.module.scss';

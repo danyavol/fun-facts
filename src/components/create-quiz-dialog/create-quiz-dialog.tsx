@@ -1,5 +1,5 @@
 import { Button, Dialog, Tooltip } from '@radix-ui/themes';
-import { useCreateQuiz } from '../../services/quizzes.service.ts';
+import { useCreateQuiz } from '../../services/quizzes.service.tsx';
 import { useState } from 'react';
 import { QuizForm } from '../quiz-form/quiz-form.tsx';
 import { getDefaultQuizValue, QuizFormData } from '../quiz-form/default-quiz-form-value.ts';

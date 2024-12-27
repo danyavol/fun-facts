@@ -59,8 +59,14 @@ export function QuizForm({
     }
 
     return (
-        <Dialog.Content maxWidth="450px" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <Dialog.Content
+            maxWidth="450px"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            aria-describedby={'Заполни форму квиза'}
+        >
             <Dialog.Title>{type == 'new' ? 'Создать новый квиз' : 'Изменить квиз'}</Dialog.Title>
+            {/* Needed to avoid warning */}
+            <Dialog.Description style={{ display: 'none' }}></Dialog.Description>
 
             <Flex direction="column" gap="3" mb="4">
                 <label>

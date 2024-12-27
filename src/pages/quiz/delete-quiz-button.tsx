@@ -1,5 +1,5 @@
 import { AlertDialog, Button, Flex, IconButton } from '@radix-ui/themes';
-import { useDeleteQuiz } from '../../services/quizzes.service.ts';
+import { useDeleteQuiz } from '../../services/quizzes.service.tsx';
 import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { TrashIcon } from '@radix-ui/react-icons';
@@ -10,7 +10,6 @@ export function DeleteQuizButton({ quizId, name }: { quizId: string; name: strin
     const [open, setOpen] = useState(false);
 
     async function deleteCurrentQuiz() {
-        // TODO: Check permissions
         await deleteQuiz(quizId);
         setOpen(false);
         navigate('/');

@@ -20,21 +20,25 @@ export function FactForm({
     readonlyForm = false,
 }: FactFormProps) {
     const [text, setText] = useState(value.text);
-    const [touched, setTouched] = useState(false);
+    const [dirty, setDirty] = useState(false);
 
-    const hasChanges = text !== value.text;
-    const isValid = text.length && text.length < 250;
+    const trimmedText = text.trim();
+
+    const hasChanges = trimmedText !== value.text;
+    const isValid = trimmedText.length && trimmedText.length < 250;
 
     const isSubmitDisabled = !isValid || !hasChanges || disabled;
 
-    const showTextError = !isValid && touched;
+    const showTextError = !isValid && dirty;
 
     useEffect(() => {
         setText(value.text);
     }, [value]);
 
     function submit() {
-        onSubmit({ text });
+        if (isSubmitDisabled) return;
+        onSubmit({ text: trimmedText });
+        setDirty(false);
     }
 
     return (
@@ -44,7 +48,7 @@ export function FactForm({
                 value={text}
                 onChange={(e) => {
                     setText(e.target.value);
-                    setTouched(true);
+                    setDirty(true);
                 }}
                 placeholder="Напиши что-нибудь о себе"
                 readOnly={readonlyForm}

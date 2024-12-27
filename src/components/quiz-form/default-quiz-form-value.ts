@@ -3,4 +3,4 @@ export type QuizFormData = {
     answers: string[];
 };
 
-export const getDefaultQuizValue = (): QuizFormData => ({ name: '', answers: [] });
+export const getDefaultQuizValue = (): QuizFormData => ({ name: '', answers: [''] });

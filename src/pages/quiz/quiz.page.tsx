@@ -110,8 +110,8 @@ export function QuizPage() {
                         </Callout.Icon>
                         <Callout.Text>
                             Квиз уже начался! Переходи{' '}
-                            <Link asChild color="green" weight="bold">
-                                <NavLink to={'play'}>ПО ССЫЛКЕ</NavLink>
+                            <Link asChild color="green" weight="bold" underline="always">
+                                <NavLink to={'play'}>по ссылке</NavLink>
                             </Link>{' '}
                             и участвуй!
                         </Callout.Text>

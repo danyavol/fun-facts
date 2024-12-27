@@ -59,7 +59,7 @@ export function QuizForm({
     }
 
     return (
-        <Dialog.Content maxWidth="450px">
+        <Dialog.Content maxWidth="450px" onOpenAutoFocus={(e) => e.preventDefault()}>
             <Dialog.Title>{type == 'new' ? 'Создать новый квиз' : 'Изменить квиз'}</Dialog.Title>
 
             <Flex direction="column" gap="3" mb="4">
@@ -68,6 +68,7 @@ export function QuizForm({
                         Название
                     </Text>
                     <TextField.Root
+                        autoFocus
                         maxLength={60}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -76,14 +77,21 @@ export function QuizForm({
                 </label>
             </Flex>
 
-            <Flex justify="between" mb="2">
-                <Text as="div" size="2" weight="bold">
-                    Имена участников (варианты ответов)
-                </Text>
+            <Flex justify="between" mb="2" align="center">
+                <Box>
+                    <Text as="div" size="2" weight="bold">
+                        Имена участников
+                    </Text>
+                    <Text as="div" size="2" color="gray" trim="both">
+                        Используются в качестве ответов в квизе
+                    </Text>
+                </Box>
+
                 <IconButton size="1" onClick={addAnswer}>
                     <PlusIcon />
                 </IconButton>
             </Flex>
+
             <Flex direction="column" gap="2">
                 {answers.map((answer, answerId) => (
                     <Flex align="center" gap="2" key={answerId}>
@@ -91,7 +99,7 @@ export function QuizForm({
                             <TextField.Root
                                 value={answer}
                                 onChange={(e) => setAnswer(answerId, e.target.value)}
-                                placeholder={'Введи ответ'}
+                                placeholder={'Введи имя'}
                             />
                         </Box>
                         <IconButton size="1" variant="ghost" color="gray" mr="1" onClick={() => removeAnswer(answerId)}>

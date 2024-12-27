@@ -18,20 +18,21 @@ export function CreateQuizButton() {
     }
 
     return (
-        <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger>
-                <Tooltip content={!isAdmin ? 'Только администратор может создавать новые квизы' : 'Создать новый квиз'}>
-                    <Button disabled={!isAdmin}>Создать квиз</Button>
-                </Tooltip>
-            </Dialog.Trigger>
-
-            <QuizForm
-                onCancel={() => setOpen(false)}
-                onConfirm={createNewQuiz}
-                isLoading={isLoading}
-                type="new"
-                value={value}
-            />
-        </Dialog.Root>
+        <>
+            <Tooltip content={!isAdmin ? 'Только администратор может создавать новые квизы' : 'Создать новый квиз'}>
+                <Button disabled={!isAdmin} onClick={() => setOpen(true)}>
+                    Создать квиз
+                </Button>
+            </Tooltip>
+            <Dialog.Root open={open} onOpenChange={setOpen}>
+                <QuizForm
+                    onCancel={() => setOpen(false)}
+                    onConfirm={createNewQuiz}
+                    isLoading={isLoading}
+                    type="new"
+                    value={value}
+                />
+            </Dialog.Root>
+        </>
     );
 }

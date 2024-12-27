@@ -9,7 +9,7 @@
 
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { onDocumentWritten } from 'firebase-functions/v2/firestore';
+import { onDocumentWritten, onDocumentDeleted, onDocumentCreated } from 'firebase-functions/v2/firestore';
 
 initializeApp();
 
@@ -58,4 +58,23 @@ export const updateTotalFacts = onDocumentWritten(
     }
 );
 
-// TODO: Populate totalFacts = 0 when new quiz created
+export const deleteQuizFacts = onDocumentDeleted(
+    { document: '/quizzes/{quizId}', region: 'europe-central2' },
+    async ({ params: { quizId } }) => {
+        const factsRef = getFirestore().collection('/facts');
+
+        // Delete all facts where quizId matches the deleted quiz
+        const querySnapshot = await factsRef.where('quizId', '==', quizId).get();
+        querySnapshot.forEach((doc) => {
+            doc.ref.delete();
+        });
+    }
+);
+
+export const populateTotalFacts = onDocumentCreated(
+    { document: '/quizzes/{quizId}', region: 'europe-central2' },
+    async ({ document }) => {
+        const quizRef = getFirestore().doc(document);
+        await quizRef.update({ totalFacts: 0 });
+    }
+);

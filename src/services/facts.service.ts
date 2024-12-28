@@ -8,6 +8,7 @@ import {
     deleteDoc,
     query,
     where,
+    Timestamp,
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
@@ -18,8 +19,8 @@ export type Fact = {
     ownerId: string;
     imageUrl: string | null;
     text: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
 };
 
 export function useQuizFacts(quizId: string) {
@@ -70,8 +71,8 @@ export function useCreateFact() {
             ...params,
             imageUrl: null,
             ownerId: user.uid,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+            createdAt: Timestamp.now(),
+            updatedAt: Timestamp.now(),
         };
 
         await addDoc(collection(getFirestore(), `facts`), factData);
@@ -92,7 +93,7 @@ export function useEditFact() {
 
         const factData: Partial<Fact> = {
             ...paramsWithoutId,
-            updatedAt: new Date().toISOString(),
+            updatedAt: Timestamp.now(),
         };
 
         await updateDoc(doc(getFirestore(), `facts/${params.id}`), factData);

@@ -8,6 +8,7 @@ import {
     deleteDoc,
     query,
     orderBy,
+    Timestamp
 } from 'firebase/firestore';
 import { Badge } from '@radix-ui/themes';
 import { useEffect, useState } from 'react';
@@ -19,8 +20,8 @@ export type Quiz = {
     answers: string[];
     ownerId: string;
     totalFacts?: number;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Timestamp;
+    updatedAt: Timestamp;
     status: 'open' | 'started' | 'ended';
 };
 
@@ -117,8 +118,8 @@ export function useCreateQuiz() {
             ...params,
             ownerId: user.uid,
             status: 'open',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+            createdAt: Timestamp.now(),
+            updatedAt: Timestamp.now(),
         };
 
         try {
@@ -142,7 +143,7 @@ export function useEditQuiz() {
 
         const quizData: Partial<Omit<Quiz, 'totalFacts' | 'id'>> = {
             ...paramsWithoutId,
-            updatedAt: new Date().toISOString(),
+            updatedAt: Timestamp.now(),
         };
 
         try {

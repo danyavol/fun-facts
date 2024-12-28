@@ -10,6 +10,7 @@
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { onDocumentWritten, onDocumentDeleted, onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { getStorage } from 'firebase-admin/storage';
 
 initializeApp();
 
@@ -66,6 +67,8 @@ export const deleteQuizFacts = onDocumentDeleted(
         // Delete all facts where quizId matches the deleted quiz
         const querySnapshot = await factsRef.where('quizId', '==', quizId).get();
         querySnapshot.forEach((doc) => {
+            const imageUrl = doc.get('imageUrl') as null | string;
+            if (imageUrl) getStorage().bucket().file(`fact-image/${imageUrl}`).delete();
             doc.ref.delete();
         });
     }

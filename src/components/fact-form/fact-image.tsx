@@ -1,13 +1,14 @@
-import { ImageIcon } from '@radix-ui/react-icons';
-import { Text, Flex, Spinner, AspectRatio } from '@radix-ui/themes';
+import { ImageIcon, TrashIcon } from '@radix-ui/react-icons';
+import { Text, Flex, Spinner, AspectRatio, IconButton } from '@radix-ui/themes';
 
 import styles from './fact-image.module.scss';
 import { ChangeEvent, useRef } from 'react';
-import { useImageUpload } from '../../services/image.service.ts';
+import { useDeleteImage, useImageUpload } from '../../services/image.service.ts';
 
 export function FactImage({ factId, imageUrl }: { factId: string; imageUrl?: string | null }) {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { uploadImage, isLoading } = useImageUpload();
+    const { deleteImage, isLoading: deleteImageLoading} = useDeleteImage();
 
     async function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
         const image = event.target.files?.[0];
@@ -41,8 +42,16 @@ export function FactImage({ factId, imageUrl }: { factId: string; imageUrl?: str
                 </Flex>
             )}
             {imageUrl && (
-                <AspectRatio ratio={16 / 8}>
+                <AspectRatio ratio={16 / 8} className={styles.imageWrapper}>
                     <img src={imageUrl} className={styles.image} alt="Фото к факту" />
+                    <IconButton
+                        className={styles.deleteImageBtn}
+                        variant="solid"
+                        color="red"
+                        size="1"
+                        onClick={() => deleteImage(factId)}
+                        loading={deleteImageLoading}
+                    ><TrashIcon/></IconButton>
                 </AspectRatio>
             )}
             <input type="file" ref={inputRef} accept="image/*" hidden={true} onChange={handleFileChange} />

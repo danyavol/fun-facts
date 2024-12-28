@@ -65,12 +65,15 @@ export const deleteQuizFacts = onDocumentDeleted(
         const factsRef = getFirestore().collection('/facts');
 
         // Delete all facts where quizId matches the deleted quiz
-        const querySnapshot = await factsRef.where('quizId', '==', quizId).get();
-        querySnapshot.forEach((doc) => {
-            const imageUrl = doc.get('imageUrl') as null | string;
-            if (imageUrl) getStorage().bucket().file(`fact-image/${imageUrl}`).delete();
-            doc.ref.delete();
-        });
+        const factsToDelete = await factsRef.where('quizId', '==', quizId).get();
+        await Promise.all(factsToDelete.docs.map(async (fact) => {
+            try {
+                // Try to delete fact image. It's fine if there is no image and it throws an error
+                await getStorage().bucket().file(`fact-image/${fact.id}`).delete();
+            } finally {
+                await fact.ref.delete();
+            }
+        }));
     }
 );
 

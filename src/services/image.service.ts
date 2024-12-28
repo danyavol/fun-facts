@@ -18,7 +18,6 @@ export function useImageUpload() {
             // Get the download URL
             const imageUrl = await getDownloadURL(storageRef);
             // Set image url in store
-            // TODO: Remove image if fact was deleted
             await editFact({ id: factId, imageUrl });
 
             return imageUrl;

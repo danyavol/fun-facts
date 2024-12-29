@@ -18,7 +18,7 @@ export function QuizzesListPage() {
                 </Flex>
 
                 <Flex direction="column" gap="3">
-                    {isLoading && <Spinner size="3" />}
+                    {isLoading && <Flex justify="center"><Spinner size="3" /></Flex>}
                     {!isLoading &&
                         quizzes.map((quiz) => (
                             <NavLink key={quiz.id} to={`/quiz/${quiz.id}`}>

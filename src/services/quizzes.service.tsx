@@ -89,10 +89,10 @@ export function useQuiz(quizId: string) {
         const unsubscribe = onSnapshot(
             doc(getFirestore(), `quizzes/${quizId}`),
             (snapshot) => {
-                setQuiz({
+                setQuiz(snapshot.exists() ? {
                     id: snapshot.id,
                     ...snapshot.data(),
-                } as Quiz);
+                } as Quiz : null);
                 setIsLoading(false);
             },
             (e) => {

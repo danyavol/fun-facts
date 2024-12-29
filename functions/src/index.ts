@@ -84,3 +84,49 @@ export const populateTotalFacts = onDocumentCreated(
         await quizRef.update({ totalFacts: 0 });
     }
 );
+
+export const createGame = onDocumentWritten(
+    { document: '/quizzes/{quizId}', region: 'europe-central2' },
+    async ({ data, params: { quizId } }) => {
+        const after = data?.after.data();
+        const before = data?.before.data();
+        if (!after || !before) return;
+
+        if (after.status !== before.status && after.status === 'started') {
+            await createNewGame(quizId, after);
+        }
+    }
+)
+
+async function createNewGame(quizId: string, quizData: FirebaseFirestore.DocumentData) {
+    const quizFacts = await getFirestore().collection('/facts').where('quizId', '==', quizId).get();
+    const mappedFacts = quizFacts.docs.map(fact => ({ text: fact.data().text, imageUrl: fact.data().imageUrl }));
+    shuffleArray(mappedFacts);
+
+    const gameRef = getFirestore().doc(`/games/${quizId}`);
+    await gameRef.set({
+        answers: quizData.answers,
+        correctAnswers: {},
+        facts: mappedFacts,
+        displayedFact: null,
+        ownerId: quizData.ownerId,
+        status: 'started'
+    });
+}
+
+function shuffleArray<T>(array: T[]): void {
+    let currentIndex = array.length;
+
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+
+        // Pick a remaining element...
+        const randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]
+        ];
+    }
+}

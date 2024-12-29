@@ -49,7 +49,7 @@ export function FactForm({
 
     return (
         <Flex direction="column">
-            {type === 'edit' && factId && <FactImage factId={factId} imageUrl={imageUrl} />}
+            {type === 'edit' && factId && <FactImage factId={factId} imageUrl={imageUrl} readOnly={readonlyForm} />}
             <TextArea
                 className={type === 'edit' ? styles.textAreaBelowImage : ''}
                 color={showTextError ? 'red' : undefined}

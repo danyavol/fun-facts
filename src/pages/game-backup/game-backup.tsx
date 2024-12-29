@@ -1,6 +1,6 @@
 import { useParams } from 'react-router';
 import { useGame } from '../../services/game.service.ts';
-import { AspectRatio, Box, Button, Container, Flex, Separator, Spinner, Text } from '@radix-ui/themes';
+import { Box, Button, Container, Flex, Separator, Spinner, Text } from '@radix-ui/themes';
 import styles from './game-backup.module.scss';
 import { useState } from 'react';
 
@@ -47,9 +47,7 @@ export function GameBackupPage() {
                         <Separator size="4" mb="3" />
                         {fact.imageUrl && (
                             <Box mb="3">
-                                <AspectRatio ratio={16 / 8}>
-                                    <img src={fact.imageUrl} className={styles.image} alt="Фото к факту" />
-                                </AspectRatio>
+                                <img src={fact.imageUrl} className={styles.image} alt="Фото к факту" />
                             </Box>
                         )}
                         <Text>{fact.text}</Text>

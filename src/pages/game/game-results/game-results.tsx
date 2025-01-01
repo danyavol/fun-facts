@@ -7,5 +7,5 @@ type GameResultsProps = {
 };
 
 export function GameResults(props: GameResultsProps) {
-    return null;
+    return props.game.id;
 }

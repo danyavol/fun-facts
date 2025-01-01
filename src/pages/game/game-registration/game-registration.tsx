@@ -1,9 +1,10 @@
 import { Game, Player, startQuiz, useGamePlayerSelection } from '../../../services/game.service.ts';
-import { Badge, Box, Button, Flex, Heading, Separator, Text } from '@radix-ui/themes';
+import { Box, Button, Flex, Heading, Separator, Text } from '@radix-ui/themes';
 
 import styles from './game-registration.module.scss';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useCurrentUser } from '../../../services/auth.service.ts';
+import { Me } from '../../../components/me/me.tsx';
 
 type GameRegistrationProps = {
     game: Game;
@@ -37,6 +38,7 @@ export function GameRegistration({ game, players, me }: GameRegistrationProps) {
                                 onClick={() => (isMe ? deselectPlayer(playerId) : selectPlayer(playerId, me))}
                                 className={styles.name}
                             >
+                                {isMe && <Me type="inverse" />}
                                 {answer}
                             </Button>
                             <Box className={styles.status}>
@@ -45,14 +47,6 @@ export function GameRegistration({ game, players, me }: GameRegistrationProps) {
                                         <CheckIcon color="green" height={22} width={22} />
                                         <Text color="green" weight="bold">
                                             Готов
-                                            {isMe && (
-                                                <>
-                                                    {' '}
-                                                    <Badge color="indigo" size="1" variant="outline">
-                                                        Я
-                                                    </Badge>
-                                                </>
-                                            )}
                                         </Text>
                                     </Flex>
                                 )}

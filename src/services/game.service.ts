@@ -1,5 +1,14 @@
 import type { Fact } from './facts.service';
-import { doc, getFirestore, Timestamp, onSnapshot, collection, updateDoc, setDoc } from 'firebase/firestore';
+import {
+    doc,
+    getFirestore,
+    Timestamp,
+    onSnapshot,
+    collection,
+    updateDoc,
+    setDoc,
+    deleteField,
+} from 'firebase/firestore';
 import { getCurrentUser, useCurrentUser } from './auth.service.ts';
 import { useEffect, useState } from 'react';
 import { getRealTimeOffset } from '../utils/time-sync.ts';
@@ -72,10 +81,15 @@ export function useGamePlayerSelection(gameId: string) {
     async function selectPlayer(playerId: string, me: Player | null) {
         if (me?.userId) await deselectPlayer(me.id);
         const user = await getCurrentUser();
-        await setDoc(doc(getFirestore(), `/games/${gameId}/players/${playerId}`), {
-            userId: user.uid,
-            givenAnswers: {},
-        } as Omit<Player, 'id'>);
+        // TODO: Fails when givenAnswers is not empty in firestore
+        await setDoc(
+            doc(getFirestore(), `/games/${gameId}/players/${playerId}`),
+            {
+                userId: user.uid,
+                givenAnswers: {},
+            } as Omit<Player, 'id'>,
+            { merge: true }
+        );
     }
 
     async function deselectPlayer(playerId: string) {
@@ -111,4 +125,18 @@ export async function tempEndQuiz(game: Game) {
     await updateDoc(doc(getFirestore(), `/games/${game.id}`), {
         displayedFact: null,
     } as Partial<Game>);
+}
+
+export async function voteForFact(gameId: string, playerId: string, factId: string, answerId: string) {
+    console.log('1', playerId, `givenAnswers.${factId}`);
+    await updateDoc(doc(getFirestore(), `/games/${gameId}/players/${playerId}`), {
+        [`givenAnswers.${factId}`]: answerId,
+    });
+}
+
+export async function revokeVote(gameId: string, playerId: string, factId: string) {
+    console.log('2', playerId, `givenAnswers.${factId}`);
+    await updateDoc(doc(getFirestore(), `/games/${gameId}/players/${playerId}`), {
+        [`givenAnswers.${factId}`]: deleteField(),
+    });
 }

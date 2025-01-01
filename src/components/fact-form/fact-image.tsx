@@ -10,7 +10,7 @@ export function FactImage({
     imageUrl,
     readOnly,
 }: {
-    factId: string;
+    factId?: string;
     imageUrl?: string | null;
     readOnly: boolean;
 }) {
@@ -20,7 +20,7 @@ export function FactImage({
 
     async function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
         const image = event.target.files?.[0];
-        if (!image) return;
+        if (!image || !factId) return;
 
         await uploadImage(factId, image);
     }
@@ -64,7 +64,7 @@ export function FactImage({
             {imageUrl && (
                 <AspectRatio ratio={16 / 8} className={styles.imageWrapper}>
                     <img src={imageUrl} className={styles.image} alt="Фото к факту" />
-                    {!readOnly && (
+                    {!readOnly && factId && (
                         <IconButton
                             className={styles.deleteImageBtn}
                             variant="solid"

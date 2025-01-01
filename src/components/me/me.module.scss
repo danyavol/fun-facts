@@ -1,0 +1,16 @@
+.wrapper {
+  color: var(--color);
+  box-shadow: inset 0 0 0 1px var(--color);
+
+  &.normal {
+    --color: var(--accent-a11);
+  }
+
+  &.inverse {
+    --color: var(--accent-contrast);
+  }
+
+  &.disabled {
+    --color: var(--gray-a8);
+  }
+}

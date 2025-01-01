@@ -52,7 +52,7 @@ export function GamePage() {
         return (
             <Container size="2" p="4">
                 <Box className="main-container" p="5">
-                    <FactView game={game} players={players} me={me} />
+                    <FactView game={game} displayedFact={game.displayedFact} players={players} me={me} />
                 </Box>
             </Container>
         );

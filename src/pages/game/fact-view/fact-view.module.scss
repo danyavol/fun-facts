@@ -1,0 +1,11 @@
+.factText {
+  border-radius: 0 0 var(--radius-2) var(--radius-2);
+  border: 1px solid var(--gray-a7);
+  padding: var(--space-2) var(--space-4);
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}

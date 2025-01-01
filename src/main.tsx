@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import './index.scss';
 import './firebase.ts';
+import './utils/time-sync.ts';
 import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
 

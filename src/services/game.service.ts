@@ -2,6 +2,7 @@ import type { Fact } from './facts.service';
 import { doc, getFirestore, Timestamp, onSnapshot, collection, updateDoc, setDoc } from 'firebase/firestore';
 import { getCurrentUser, useCurrentUser } from './auth.service.ts';
 import { useEffect, useState } from 'react';
+import { getRealTimeOffset } from '../utils/time-sync.ts';
 
 export type AnswerId = string; // equals to the index of Game.answers array
 export type FactId = string; // equals to the index of Game.facts array
@@ -89,7 +90,7 @@ export function useGamePlayerSelection(gameId: string) {
 function getNextFactDates() {
     const startTimeoutSeconds = 3;
     const secondsToAnswer = 45;
-    const now = Date.now();
+    const now = Date.now() + getRealTimeOffset();
 
     return {
         start: Timestamp.fromDate(new Date(now + startTimeoutSeconds * 1000)),

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Timestamp } from 'firebase/firestore';
 import { Box, Container, Flex, Heading } from '@radix-ui/themes';
+import { getRealTimeOffset } from '../../../utils/time-sync.ts';
 
 type NextFactCountdownProps = {
     date: Timestamp;
@@ -10,7 +11,7 @@ export function NextFactCountdown({ date }: NextFactCountdownProps) {
     const [secondsLeft, setSecondsLeft] = useState(0);
 
     useEffect(() => {
-        const now = Date.now();
+        const now = Date.now() + getRealTimeOffset();
         const endDate = date.toMillis();
         setSecondsLeft(Math.max(Math.ceil((endDate - now) / 1000), 0));
 

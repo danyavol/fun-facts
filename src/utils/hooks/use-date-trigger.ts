@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getRealTimeOffset } from '../time-sync.ts';
 
 /**
  * Custom hook to trigger when a specific date and time is reached.
@@ -15,7 +16,7 @@ export function useDateTrigger(targetDateTime?: string | number | null): null | 
         }
 
         const targetTime = new Date(targetDateTime).getTime();
-        const currentTime = Date.now();
+        const currentTime = Date.now() + getRealTimeOffset();
         const timeUntilTarget = targetTime - currentTime;
 
         if (timeUntilTarget <= 0) {

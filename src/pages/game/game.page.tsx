@@ -46,13 +46,7 @@ export function GamePage() {
         );
     } else if (!factStarted) {
         /** Prepare to see the next fact */
-        return (
-            <Container size="2" p="4">
-                <Box className="main-container" p="5">
-                    <NextFactCountdown game={game} players={players} me={me} />
-                </Box>
-            </Container>
-        );
+        return <NextFactCountdown date={game.displayedFact.start} />;
     } else {
         /** View the fact, answer and see fact results */
         return (

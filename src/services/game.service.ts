@@ -1,6 +1,6 @@
 import type { Fact } from './facts.service';
-import { doc, getFirestore, Timestamp, onSnapshot, collection } from 'firebase/firestore';
-import { useCurrentUser } from './auth.service.ts';
+import { doc, getFirestore, Timestamp, onSnapshot, collection, updateDoc, setDoc } from 'firebase/firestore';
+import { getCurrentUser, useCurrentUser } from './auth.service.ts';
 import { useEffect, useState } from 'react';
 
 export type AnswerId = string; // equals to the index of Game.answers array
@@ -8,7 +8,7 @@ export type FactId = string; // equals to the index of Game.facts array
 
 export type Player = {
     id: string; // equals to AnswerId
-    userId: string;
+    userId: string | null;
     givenAnswers: { [factId: FactId]: AnswerId };
 };
 
@@ -65,4 +65,49 @@ export function useGamePlayers(gameId: string) {
     }, [user, gameId]);
 
     return { me, players };
+}
+
+export function useGamePlayerSelection(gameId: string) {
+    async function selectPlayer(playerId: string, me: Player | null) {
+        if (me?.userId) await deselectPlayer(me.id);
+        const user = await getCurrentUser();
+        await setDoc(doc(getFirestore(), `/games/${gameId}/players/${playerId}`), {
+            userId: user.uid,
+            givenAnswers: {},
+        } as Omit<Player, 'id'>);
+    }
+
+    async function deselectPlayer(playerId: string) {
+        await updateDoc(doc(getFirestore(), `/games/${gameId}/players/${playerId}`), {
+            userId: null,
+        } as Partial<Player>);
+    }
+
+    return { selectPlayer, deselectPlayer };
+}
+
+function getNextFactDates() {
+    const startTimeoutSeconds = 3;
+    const secondsToAnswer = 45;
+    const now = Date.now();
+
+    return {
+        start: Timestamp.fromDate(new Date(now + startTimeoutSeconds * 1000)),
+        end: Timestamp.fromDate(new Date(now + startTimeoutSeconds * 1000 + secondsToAnswer * 1000)),
+    };
+}
+
+export async function startQuiz(game: Game) {
+    await updateDoc(doc(getFirestore(), `/games/${game.id}`), {
+        displayedFact: {
+            id: '0',
+            ...getNextFactDates(),
+        },
+    } as Partial<Game>);
+}
+
+export async function tempEndQuiz(game: Game) {
+    await updateDoc(doc(getFirestore(), `/games/${game.id}`), {
+        displayedFact: null,
+    } as Partial<Game>);
 }

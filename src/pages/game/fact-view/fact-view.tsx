@@ -1,4 +1,6 @@
-import { Game, Player } from '../../../services/game.service.ts';
+import { Game, Player, tempEndQuiz } from '../../../services/game.service.ts';
+import { useCurrentUser } from '../../../services/auth.service.ts';
+import { Button } from '@radix-ui/themes';
 
 type FactViewProps = {
     game: Game;
@@ -7,5 +9,10 @@ type FactViewProps = {
 };
 
 export function FactView(props: FactViewProps) {
-    return null;
+    const { isAdmin } = useCurrentUser();
+    return (
+        <Button onClick={() => tempEndQuiz(props.game)} disabled={!isAdmin}>
+            Back
+        </Button>
+    );
 }

@@ -5,6 +5,8 @@ import { FactImage } from '../../../components/fact-form/fact-image.tsx';
 
 import styles from './fact-view.module.scss';
 import { Me } from '../../../components/me/me.tsx';
+import { TimeToAnswer } from './time-to-answer.tsx';
+import { useState } from 'react';
 
 type FactViewProps = {
     game: Game;
@@ -16,8 +18,17 @@ type FactViewProps = {
 export function FactView({ game, players, me, displayedFact }: FactViewProps) {
     const { isAdmin } = useCurrentUser();
     const fact = game.facts[Number(displayedFact.id)];
+    const [votingEnded, setVotingEnded] = useState(false);
+
+    (function checkIfEveryoneVoted() {
+        if (votingEnded) return;
+        const isEnded = players.every((player) => player.givenAnswers[displayedFact.id] != null);
+        if (isEnded) console.log('123123123');
+        if (isEnded) setVotingEnded(isEnded);
+    })();
+
     const myAnswer: string | null = me.givenAnswers[displayedFact.id] ?? null;
-    console.log(players);
+
     return (
         <>
             <Button onClick={() => tempEndQuiz(game)} disabled={!isAdmin}>
@@ -30,10 +41,23 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
                 <FactImage imageUrl={fact.imageUrl} readOnly={true} />
                 <Box className={styles.factText}>{fact.text}</Box>
             </Flex>
-            <Heading size="4" my="2" align="center">
-                Чей это факт?
-            </Heading>
-            TODO: Add timer
+            <Flex direction="column" justify="center" height="50px" my="3">
+                {!votingEnded && (
+                    <>
+                        <Heading size="4" mb="2" align="center">
+                            Чей это факт?
+                        </Heading>
+                        <TimeToAnswer fact={displayedFact} timeEnded={() => setVotingEnded(true)} />
+                    </>
+                )}
+
+                {votingEnded && (
+                    <Heading align="center" size="4">
+                        Голосование окончено!
+                    </Heading>
+                )}
+            </Flex>
+
             <Box className={styles.answers}>
                 {game.answers.map((answer, index) => {
                     const answerId = String(index);
@@ -44,7 +68,7 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
                             key={index}
                             variant={isMyAnswer ? 'solid' : 'soft'}
                             size="4"
-                            disabled={myAnswer !== null && !isMyAnswer}
+                            disabled={votingEnded || (myAnswer !== null && !isMyAnswer)}
                             onClick={() =>
                                 isMyAnswer
                                     ? revokeVote(game.id, me.id, displayedFact.id)

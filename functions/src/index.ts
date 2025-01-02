@@ -66,14 +66,16 @@ export const deleteQuizFacts = onDocumentDeleted(
 
         // Delete all facts where quizId matches the deleted quiz
         const factsToDelete = await factsRef.where('quizId', '==', quizId).get();
-        await Promise.all(factsToDelete.docs.map(async (fact) => {
-            try {
-                // Try to delete fact image. It's fine if there is no image and it throws an error
-                await getStorage().bucket().file(`fact-image/${fact.id}`).delete();
-            } finally {
-                await fact.ref.delete();
-            }
-        }));
+        await Promise.all(
+            factsToDelete.docs.map(async (fact) => {
+                try {
+                    // Try to delete fact image. It's fine if there is no image and it throws an error
+                    await getStorage().bucket().file(`fact-image/${fact.id}`).delete();
+                } finally {
+                    await fact.ref.delete();
+                }
+            })
+        );
     }
 );
 
@@ -96,11 +98,11 @@ export const createGame = onDocumentWritten(
             await createNewGame(quizId, after);
         }
     }
-)
+);
 
 async function createNewGame(quizId: string, quizData: FirebaseFirestore.DocumentData) {
     const quizFacts = await getFirestore().collection('/facts').where('quizId', '==', quizId).get();
-    const mappedFacts = quizFacts.docs.map(fact => ({ text: fact.data().text, imageUrl: fact.data().imageUrl }));
+    const mappedFacts = quizFacts.docs.map((fact) => ({ text: fact.data().text, imageUrl: fact.data().imageUrl }));
     shuffleArray(mappedFacts);
 
     const gameRef = getFirestore().doc(`/games/${quizId}`);
@@ -110,8 +112,15 @@ async function createNewGame(quizId: string, quizData: FirebaseFirestore.Documen
         facts: mappedFacts,
         displayedFact: null,
         ownerId: quizData.ownerId,
-        status: 'started'
+        status: 'started',
     });
+
+    const batch = getFirestore().batch();
+    const oldPlayers = await getFirestore().collection(`/games/${quizId}/players`).get();
+    oldPlayers.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+    });
+    await batch.commit();
 }
 
 function shuffleArray<T>(array: T[]): void {
@@ -119,14 +128,11 @@ function shuffleArray<T>(array: T[]): void {
 
     // While there remain elements to shuffle...
     while (currentIndex != 0) {
-
         // Pick a remaining element...
         const randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
 
         // And swap it with the current element.
-        [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]
-        ];
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
     }
 }

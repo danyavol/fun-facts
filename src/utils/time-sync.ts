@@ -22,14 +22,26 @@ const localStorageKey = 'time-offset';
     // Compensation due to the long request time
     const latencyCompensation = requestDuration / 2;
 
-    const { year, month, day, hour, minute, seconds, milliSeconds } = (await result.json()) as TimeResponse;
+    const response: TimeResponse = await result.json();
+    const { year, month, day, hour, minute, seconds, milliSeconds } = response;
     const nowTime = Date.now();
     const realTime = Date.UTC(year, month - 1, day, hour, minute, seconds, milliSeconds + latencyCompensation);
 
     const offset = realTime - nowTime;
 
     localStorage.setItem(localStorageKey, String(offset));
-    alert(`Offset set to ${offset}`);
+    alert(
+        JSON.stringify(
+            {
+                offset,
+                requestDuration,
+                resp: (response as unknown as { dateTime: string })['dateTime'],
+                now: new Date(nowTime).toISOString(),
+            },
+            null,
+            2
+        )
+    );
 })();
 
 export function getRealTimeOffset() {

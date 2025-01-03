@@ -35,10 +35,12 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
 
     return (
         <>
-            <Button onClick={() => tempEndQuiz(game)} disabled={!isAdmin} variant="outline">
-                Back (temp)
-            </Button>
-            <Text color="gray">
+            {isAdmin && (
+                <Button onClick={() => tempEndQuiz(game)} variant="outline">
+                    Back (temp)
+                </Button>
+            )}
+            <Text color="gray" weight="medium">
                 Факт {Number(displayedFact.id) + 1} из {game.facts.length}
             </Text>
             <Flex direction="column" mt="2">

@@ -16,34 +16,20 @@ const localStorageKey = 'time-offset';
  * This offset should be taken into account when working with dates.
  * */
 (async function fetchRealTimeOffset() {
-    const requestSent = Date.now();
+    // To disable browser caching we need to add { cache: 'no-store' }
+    // + to ensure that browser doesn't even use old cache - we need to have unique URL every time
     const result = await fetch(`https://timeapi.io/api/time/current/zone?timeZone=UTC&timestamp=${Date.now()}`, {
         cache: 'no-store',
     });
-    const requestDuration = Date.now() - requestSent;
-    // Compensation due to the long request time
-    const latencyCompensation = requestDuration / 2;
 
     const response: TimeResponse = await result.json();
     const { year, month, day, hour, minute, seconds, milliSeconds } = response;
     const nowTime = Date.now();
-    const realTime = Date.UTC(year, month - 1, day, hour, minute, seconds, milliSeconds + latencyCompensation);
+    const realTime = Date.UTC(year, month - 1, day, hour, minute, seconds, milliSeconds);
 
     const offset = realTime - nowTime;
 
     localStorage.setItem(localStorageKey, String(offset));
-    alert(
-        JSON.stringify(
-            {
-                offset,
-                requestDuration,
-                resp: (response as unknown as { dateTime: string })['dateTime'],
-                now: new Date(nowTime).toISOString(),
-            },
-            null,
-            2
-        )
-    );
 })();
 
 export function getRealTimeOffset() {

@@ -18,8 +18,8 @@ export function GamePage() {
 
     if (!game || !players) {
         return (
-            <Container size="2" p="4">
-                <Flex justify="center" className="main-container" p="5">
+            <Container className="main" size="2">
+                <Flex justify="center" className="main-container">
                     <Spinner size="3"></Spinner>
                 </Flex>
             </Container>
@@ -29,8 +29,8 @@ export function GamePage() {
     if (game.status === 'ended') {
         /** See game results */
         return (
-            <Container size="2" p="4">
-                <Box className="main-container" p="5">
+            <Container className="main" size="2">
+                <Box className="main-container">
                     <GameResults game={game} players={players} me={me} />
                 </Box>
             </Container>
@@ -38,8 +38,8 @@ export function GamePage() {
     } else if (!game.displayedFact || !me) {
         /** Register for the game. Choose yourself from the list */
         return (
-            <Container size="2" p="4">
-                <Box className="main-container" p="5">
+            <Container className="main" size="2">
+                <Box className="main-container">
                     <GameRegistration game={game} players={players} me={me} />
                 </Box>
             </Container>
@@ -50,8 +50,8 @@ export function GamePage() {
     } else {
         /** View the fact, answer and see fact results */
         return (
-            <Container size="2" p="4">
-                <Box className="main-container" p="5">
+            <Container className="main" size="2">
+                <Box className="main-container">
                     <FactView game={game} displayedFact={game.displayedFact} players={players} me={me} />
                 </Box>
             </Container>

@@ -14,8 +14,23 @@ a {
   color: inherit;
 }
 
+.main {
+  padding: var(--space-4);
+}
+
 .main-container {
   background-color: var(--color-background);
   border-radius: var(--radius-5);
   box-shadow: var(--shadow-4);
+  padding: var(--space-5);
+}
+
+@media (max-width:480px) {
+  .main {
+    padding: var(--space-2);
+  }
+
+  .main-container {
+    padding: var(--space-3);
+  }
 }

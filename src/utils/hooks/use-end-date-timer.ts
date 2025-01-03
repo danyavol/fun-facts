@@ -7,7 +7,6 @@ export function useEndDateTimer(date: Date | string | number, withMilliseconds =
     const [isEnded, setIsEnded] = useState(false);
 
     useEffect(() => {
-        setIsEnded(false);
         const now = Date.now() + getRealTimeOffset();
         const endDate = new Date(date).getTime();
         setSecondsLeft(Math.max(Math.ceil((endDate - now) / 1000), 0));
@@ -16,7 +15,12 @@ export function useEndDateTimer(date: Date | string | number, withMilliseconds =
             setMillisecondsLeft(Math.max(Math.ceil((endDate - now) / 10) * 10, 0));
         }
 
-        if (endDate - now <= 0) return;
+        if (endDate - now <= 0) {
+            setIsEnded(true);
+            return;
+        }
+
+        setIsEnded(false);
 
         let intervalId: NodeJS.Timeout;
         const timeoutId = setTimeout(

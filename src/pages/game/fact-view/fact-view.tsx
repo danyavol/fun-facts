@@ -7,6 +7,8 @@ import styles from './fact-view.module.scss';
 import { Me } from '../../../components/me/me.tsx';
 import { TimeToAnswer } from './time-to-answer.tsx';
 import { useState } from 'react';
+import { FactResults } from './fact-results/fact-results.tsx';
+import { getRealTimeOffset } from '../../../utils/time-sync.ts';
 
 type FactViewProps = {
     game: Game;
@@ -22,8 +24,10 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
 
     (function checkIfEveryoneVoted() {
         if (votingEnded) return;
-        const isEnded = players.every((player) => player.givenAnswers[displayedFact.id] != null);
-        if (isEnded) console.log('123123123');
+        const isEnded =
+            players.every((player) => player.givenAnswers[displayedFact.id] != null) ||
+            displayedFact.end.toMillis() < Date.now() + getRealTimeOffset();
+        console.log(isEnded, players);
         if (isEnded) setVotingEnded(isEnded);
     })();
 
@@ -31,7 +35,7 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
 
     return (
         <>
-            <Button onClick={() => tempEndQuiz(game)} disabled={!isAdmin}>
+            <Button onClick={() => tempEndQuiz(game)} disabled={!isAdmin} variant="outline">
                 Back (temp)
             </Button>
             <Text color="gray">
@@ -42,6 +46,11 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
                 <Box className={styles.factText}>{fact.text}</Box>
             </Flex>
             <Flex direction="column" justify="center" height="50px" my="3">
+                {votingEnded && (
+                    <Heading align="center" size="4">
+                        Голосование окончено!
+                    </Heading>
+                )}
                 {!votingEnded && (
                     <>
                         <Heading size="4" mb="2" align="center">
@@ -50,37 +59,35 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
                         <TimeToAnswer fact={displayedFact} timeEnded={() => setVotingEnded(true)} />
                     </>
                 )}
-
-                {votingEnded && (
-                    <Heading align="center" size="4">
-                        Голосование окончено!
-                    </Heading>
-                )}
             </Flex>
 
-            <Box className={styles.answers}>
-                {game.answers.map((answer, index) => {
-                    const answerId = String(index);
-                    const isMe = me.id === answerId;
-                    const isMyAnswer = answerId === myAnswer;
-                    return (
-                        <Button
-                            key={index}
-                            variant={isMyAnswer ? 'solid' : 'soft'}
-                            size="4"
-                            disabled={votingEnded || (myAnswer !== null && !isMyAnswer)}
-                            onClick={() =>
-                                isMyAnswer
-                                    ? revokeVote(game.id, me.id, displayedFact.id)
-                                    : voteForFact(game.id, me.id, displayedFact.id, answerId)
-                            }
-                        >
-                            {isMe && <Me type={isMyAnswer ? 'inverse' : myAnswer ? 'disabled' : 'normal'} />}
-                            {answer}
-                        </Button>
-                    );
-                })}
-            </Box>
+            {votingEnded && <FactResults players={players} fact={displayedFact} game={game} me={me} />}
+            {!votingEnded && (
+                <Box className={styles.answers}>
+                    {game.answers.map((answer, index) => {
+                        const answerId = String(index);
+                        const isMe = me.id === answerId;
+                        const isMyAnswer = answerId === myAnswer;
+                        return (
+                            <Button
+                                key={index}
+                                variant={isMyAnswer ? 'solid' : 'soft'}
+                                size="4"
+                                disabled={votingEnded || (myAnswer !== null && !isMyAnswer)}
+                                onClick={() =>
+                                    isMyAnswer
+                                        ? revokeVote(game.id, me.id, displayedFact.id)
+                                        : voteForFact(game.id, me.id, displayedFact.id, answerId)
+                                }
+                                className={styles.answer}
+                            >
+                                {isMe && <Me type={isMyAnswer ? 'inverse' : myAnswer ? 'disabled' : 'normal'} />}
+                                {answer}
+                            </Button>
+                        );
+                    })}
+                </Box>
+            )}
         </>
     );
 }

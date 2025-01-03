@@ -8,6 +8,8 @@ import {
     updateDoc,
     setDoc,
     deleteField,
+    query,
+    where,
 } from 'firebase/firestore';
 import { getCurrentUser, useCurrentUser } from './auth.service.ts';
 import { useEffect, useState } from 'react';
@@ -64,7 +66,7 @@ export function useGamePlayers(gameId: string) {
     useEffect(() => {
         if (!user) return;
         return onSnapshot(
-            collection(getFirestore(), `/games/${gameId}/players`),
+            query(collection(getFirestore(), `/games/${gameId}/players`), where('userId', '!=', null)),
             ({ docs }) => {
                 const me = docs.find((doc) => doc.data().userId === user.uid);
                 setMe(me ? ({ ...me.data(), id: me.id } as Player) : null);

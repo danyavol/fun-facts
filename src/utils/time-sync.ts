@@ -29,6 +29,7 @@ const localStorageKey = 'time-offset';
     const offset = realTime - nowTime;
 
     localStorage.setItem(localStorageKey, String(offset));
+    alert(`Offset set to ${offset}`);
 })();
 
 export function getRealTimeOffset() {

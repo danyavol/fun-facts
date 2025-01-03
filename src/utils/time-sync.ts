@@ -17,7 +17,9 @@ const localStorageKey = 'time-offset';
  * */
 (async function fetchRealTimeOffset() {
     const requestSent = Date.now();
-    const result = await fetch('https://timeapi.io/api/time/current/zone?timeZone=UTC', { cache: 'no-store' });
+    const result = await fetch(`https://timeapi.io/api/time/current/zone?timeZone=UTC&timestamp=${Date.now()}`, {
+        cache: 'no-store',
+    });
     const requestDuration = Date.now() - requestSent;
     // Compensation due to the long request time
     const latencyCompensation = requestDuration / 2;

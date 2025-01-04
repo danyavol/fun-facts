@@ -142,8 +142,10 @@ export async function revokeVote(gameId: string, playerId: string, factId: strin
     });
 }
 
+export const unknownAnswerId = 'unknown';
+
 export async function setCorrectAnswer(gameId: string, factId: string, answerId: string) {
     await updateDoc(doc(getFirestore(), `/games/${gameId}`), {
-        [`correctAnswers.${factId}`]: answerId,
+        [`correctAnswers.${factId}`]: answerId === unknownAnswerId ? deleteField() : answerId,
     });
 }

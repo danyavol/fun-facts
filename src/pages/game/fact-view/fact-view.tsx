@@ -67,7 +67,8 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
                         )}
                         {myAnswer == null && (
                             <Heading align="center" size="6" color="gray">
-                                Ты не проголосовал 🤦‍♂️
+                                {/* Wrapped emoji in Text to make opacity 100% */}
+                                Ты не проголосовал <Text color="indigo">😴</Text>
                             </Heading>
                         )}
                     </>

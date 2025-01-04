@@ -1,5 +1,12 @@
-import { endQuiz, Game, Player, setCorrectAnswer, showNextFact } from '../../../../services/game.service.ts';
-import { Box, Button, Flex, Select, Separator, Text } from '@radix-ui/themes';
+import {
+    endQuiz,
+    Game,
+    Player,
+    setCorrectAnswer,
+    showNextFact,
+    unknownAnswerId,
+} from '../../../../services/game.service.ts';
+import { Box, Button, Flex, Select, Separator, Text, AlertDialog } from '@radix-ui/themes';
 
 import styles from './fact-results.module.scss';
 import { CheckIcon, Cross2Icon, QuestionMarkIcon } from '@radix-ui/react-icons';
@@ -93,30 +100,65 @@ export function FactResults({ players, me, game, fact }: FactResultsType) {
                     </Text>
                     <Flex justify="between">
                         <Select.Root
-                            value={correctAnswerId}
+                            value={correctAnswerId ?? unknownAnswerId}
                             onValueChange={(answerId) => setCorrectAnswer(game.id, fact.id, answerId)}
                         >
                             <Select.Trigger placeholder="Ответ" className={styles.rightAnswer} />
-                            <Select.Content>
+                            <Select.Content variant="soft">
                                 {game.answers.map((answer, index) => (
                                     <Select.Item key={index} value={String(index)}>
                                         {answer}
                                     </Select.Item>
                                 ))}
+                                <Select.Separator />
+                                <Select.Item value={unknownAnswerId}>
+                                    <Text color={'red'}>Неизвестно</Text>
+                                </Select.Item>
                             </Select.Content>
                         </Select.Root>
                         {!isLastFact && (
-                            <Button
-                                disabled={correctAnswerId == null}
-                                onClick={() => showNextFact(game, String(nextFactId))}
-                            >
-                                Далее
-                            </Button>
+                            <AlertDialog.Root>
+                                <AlertDialog.Trigger>
+                                    <Button>Далее</Button>
+                                </AlertDialog.Trigger>
+                                <AlertDialog.Content maxWidth="450px">
+                                    <AlertDialog.Title>Ты уверен?</AlertDialog.Title>
+                                    <Flex gap="3" mt="4" justify="end">
+                                        <AlertDialog.Cancel>
+                                            <Button variant="soft" color="gray">
+                                                Отмена
+                                            </Button>
+                                        </AlertDialog.Cancel>
+                                        <AlertDialog.Action>
+                                            <Button onClick={() => showNextFact(game, String(nextFactId))}>
+                                                Далее
+                                            </Button>
+                                        </AlertDialog.Action>
+                                    </Flex>
+                                </AlertDialog.Content>
+                            </AlertDialog.Root>
                         )}
                         {isLastFact && (
-                            <Button disabled={correctAnswerId == null} onClick={() => endQuiz(game)} color="red">
-                                Завершить квиз
-                            </Button>
+                            <AlertDialog.Root>
+                                <AlertDialog.Trigger>
+                                    <Button color="red">Завершить квиз</Button>
+                                </AlertDialog.Trigger>
+                                <AlertDialog.Content maxWidth="450px">
+                                    <AlertDialog.Title>Ты уверен?</AlertDialog.Title>
+                                    <Flex gap="3" mt="4" justify="end">
+                                        <AlertDialog.Cancel>
+                                            <Button variant="soft" color="gray">
+                                                Отмена
+                                            </Button>
+                                        </AlertDialog.Cancel>
+                                        <AlertDialog.Action>
+                                            <Button variant="solid" color="red" onClick={() => endQuiz(game)}>
+                                                Завершить квиз
+                                            </Button>
+                                        </AlertDialog.Action>
+                                    </Flex>
+                                </AlertDialog.Content>
+                            </AlertDialog.Root>
                         )}
                     </Flex>
                 </>

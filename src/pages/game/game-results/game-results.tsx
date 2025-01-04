@@ -7,5 +7,5 @@ type GameResultsProps = {
 };
 
 export function GameResults(props: GameResultsProps) {
-    return props.game.id;
+    return props.game.id + ' Результаты квиза';
 }

@@ -19,7 +19,7 @@ export const TimeToAnswer = memo(({ fact, forceStop = false, timeEnded }: TimeTo
 
     return (
         <Flex align="center" gap="2">
-            <Text style={{ width: '20px' }} weight="bold" color={color} align="right">
+            <Text style={{ width: '23px' }} weight="bold" color={color} align="right">
                 {forceStop ? 0 : secondsLeft}
             </Text>
             <Progress

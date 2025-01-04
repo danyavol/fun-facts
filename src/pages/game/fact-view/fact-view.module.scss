@@ -2,6 +2,10 @@
   border-radius: 0 0 var(--radius-2) var(--radius-2);
   border: 1px solid var(--gray-a7);
   padding: var(--space-2) var(--space-4);
+
+  &.noImage {
+    border-radius: var(--radius-2);
+  }
 }
 
 .answers {
@@ -12,4 +16,8 @@
 
 .answer {
   gap: var(--space-1);
+}
+
+.smallLineHeight {
+  line-height: var(--line-height-1);
 }

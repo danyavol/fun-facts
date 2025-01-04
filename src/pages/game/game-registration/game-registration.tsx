@@ -1,4 +1,4 @@
-import { Game, Player, startQuiz, useGamePlayerSelection } from '../../../services/game.service.ts';
+import { Game, Player, showNextFact, useGamePlayerSelection } from '../../../services/game.service.ts';
 import { Box, Button, Flex, Heading, Separator, Text } from '@radix-ui/themes';
 
 import styles from './game-registration.module.scss';
@@ -67,7 +67,7 @@ export function GameRegistration({ game, players, me }: GameRegistrationProps) {
                 <>
                     <Separator size="4" mt="5" mb="3" />
                     <Flex justify="end">
-                        <Button onClick={() => startQuiz(game)} disabled={!!game.displayedFact}>
+                        <Button onClick={() => showNextFact(game, '0')} disabled={!!game.displayedFact}>
                             Начать квиз
                         </Button>
                     </Flex>

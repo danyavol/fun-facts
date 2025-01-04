@@ -114,31 +114,36 @@ function getNextFactDates() {
     };
 }
 
-export async function startQuiz(game: Game) {
+export async function showNextFact(game: Game, factId: string) {
     await updateDoc(doc(getFirestore(), `/games/${game.id}`), {
         displayedFact: {
-            id: '0',
+            id: factId,
             ...getNextFactDates(),
         },
     } as Partial<Game>);
 }
 
-export async function tempEndQuiz(game: Game) {
+export async function endQuiz(game: Game) {
     await updateDoc(doc(getFirestore(), `/games/${game.id}`), {
+        status: 'ended',
         displayedFact: null,
     } as Partial<Game>);
 }
 
 export async function voteForFact(gameId: string, playerId: string, factId: string, answerId: string) {
-    console.log('1', playerId, `givenAnswers.${factId}`);
     await updateDoc(doc(getFirestore(), `/games/${gameId}/players/${playerId}`), {
         [`givenAnswers.${factId}`]: answerId,
     });
 }
 
 export async function revokeVote(gameId: string, playerId: string, factId: string) {
-    console.log('2', playerId, `givenAnswers.${factId}`);
     await updateDoc(doc(getFirestore(), `/games/${gameId}/players/${playerId}`), {
         [`givenAnswers.${factId}`]: deleteField(),
+    });
+}
+
+export async function setCorrectAnswer(gameId: string, factId: string, answerId: string) {
+    await updateDoc(doc(getFirestore(), `/games/${gameId}`), {
+        [`correctAnswers.${factId}`]: answerId,
     });
 }

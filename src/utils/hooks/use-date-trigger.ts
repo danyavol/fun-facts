@@ -24,6 +24,7 @@ export function useDateTrigger(targetDateTime?: string | number | null): null | 
             setHasTimeArrived(true);
             return;
         }
+        setHasTimeArrived(false);
 
         // Set a timeout to update the state when the target time is reached
         const timer = setTimeout(() => {

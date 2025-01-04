@@ -1,0 +1,11 @@
+.medal {
+  font-size: var(--font-size-7);
+}
+
+.place-1-name, .place-1-points  {
+  font-weight: var(--font-weight-bold);
+}
+
+.place-2-name, .place-3-name, .place-2-points, .place-3-points  {
+  font-weight: var(--font-weight-medium);
+}

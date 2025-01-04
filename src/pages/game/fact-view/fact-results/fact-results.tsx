@@ -31,12 +31,16 @@ export function FactResults({ players, me, game, fact }: FactResultsType) {
                     const votesNumber = players.filter((player) => player.givenAnswers[fact.id] === answerId).length;
 
                     let status: 'wrong' | 'correct' | 'unknown';
+                    let backgroundColor: string;
                     if (correctAnswerId == null) {
                         status = 'unknown';
+                        backgroundColor = 'white';
                     } else if (correctAnswerId === answerId) {
                         status = 'correct';
+                        backgroundColor = 'var(--green-3)';
                     } else {
                         status = 'wrong';
+                        backgroundColor = 'var(--red-3)';
                     }
 
                     return (
@@ -70,7 +74,8 @@ export function FactResults({ players, me, game, fact }: FactResultsType) {
                                     {Array.from(Array(votesNumber)).map((_value, index) => (
                                         <PersonIcon
                                             key={index}
-                                            style={{ zIndex: index }}
+                                            zIndex={index}
+                                            backgroundColor={backgroundColor}
                                             filled={index === votesNumber - 1 && myAnswerId === answerId}
                                         />
                                     ))}

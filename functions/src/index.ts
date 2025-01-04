@@ -59,7 +59,7 @@ export const updateTotalFacts = onDocumentWritten(
     }
 );
 
-export const deleteQuizFacts = onDocumentDeleted(
+export const deleteQuizData = onDocumentDeleted(
     { document: '/quizzes/{quizId}', region: 'europe-central2' },
     async ({ params: { quizId } }) => {
         const factsRef = getFirestore().collection('/facts');
@@ -76,6 +76,8 @@ export const deleteQuizFacts = onDocumentDeleted(
                 }
             })
         );
+
+        await getFirestore().doc(`/games/${quizId}`).delete();
     }
 );
 

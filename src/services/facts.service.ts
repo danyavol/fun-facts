@@ -9,6 +9,7 @@ import {
     query,
     where,
     Timestamp,
+    orderBy,
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
@@ -36,7 +37,8 @@ export function useQuizFacts(quizId: string) {
                 query(
                     collection(getFirestore(), `facts`),
                     where('ownerId', '==', user.uid),
-                    where('quizId', '==', quizId)
+                    where('quizId', '==', quizId),
+                    orderBy('createdAt', 'desc')
                 ),
                 (snapshot) => {
                     setFacts(

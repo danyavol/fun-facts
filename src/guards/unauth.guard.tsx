@@ -7,6 +7,8 @@ export const UnAuthGuard = ({ component }: { component: () => ReactElement }) =>
     const location = useLocation();
     const { user, isLoading } = useCurrentUser();
 
+    const fromPath = location.state?.from?.pathname;
+
     if (isLoading) {
         return (
             <div className="global-spinner-container">
@@ -16,6 +18,6 @@ export const UnAuthGuard = ({ component }: { component: () => ReactElement }) =>
     } else if (!user) {
         return component();
     } else {
-        return <Navigate to="/" replace state={{ from: location }} />;
+        return <Navigate to={fromPath ? fromPath : '/'} replace state={{ from: location }} />;
     }
 };

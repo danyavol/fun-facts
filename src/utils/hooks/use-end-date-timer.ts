@@ -22,7 +22,7 @@ export function useEndDateTimer(date: Date | string | number, withMilliseconds =
 
         setIsEnded(false);
 
-        let intervalId: NodeJS.Timeout;
+        let intervalId: number;
         const timeoutId = setTimeout(
             () => {
                 if (withMilliseconds) {

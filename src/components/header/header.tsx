@@ -1,15 +1,4 @@
-import {
-    Avatar,
-    Badge,
-    Box,
-    Container,
-    DropdownMenu,
-    Flex,
-    Heading,
-    IconButton,
-    Spinner,
-    Text,
-} from '@radix-ui/themes';
+import { Avatar, Badge, Box, Container, DropdownMenu, Flex, IconButton, Spinner, Text } from '@radix-ui/themes';
 import Profile from '../../icons/profile.svg?react';
 import Incognito from '../../icons/incognito.svg?react';
 import { ExitIcon, PersonIcon } from '@radix-ui/react-icons';
@@ -28,9 +17,9 @@ export const Header = () => {
     return (
         <Container size="2" pt="4" pl="4" pr="4">
             <Flex className="main-container" px="5" py="3" justify="between" align="center">
-                <Flex gap="3" align="center">
-                    <img height="32" src="public/favicon/android-chrome-192x192.png" />
-                    <Heading color="indigo">Fun Facts</Heading>
+                <Flex gap="3" align="baseline">
+                    <img height="30" src="/assets/logo.svg" alt="App logo" />
+                    <img height="26" src="/assets/fun-facts.svg" alt="App title" />
                 </Flex>
 
                 <DropdownMenu.Root open={isOpen}>

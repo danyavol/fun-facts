@@ -15,6 +15,8 @@ import { GamePage } from './pages/game/game.page.tsx';
 import { GameBackupPage } from './pages/game-backup/game-backup.tsx';
 import * as Toast from '@radix-ui/react-toast';
 import { ToastViewport } from '@radix-ui/react-toast';
+import { AuthGuard } from './guards/auth.guard.tsx';
+import { UnAuthGuard } from './guards/unauth.guard.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -22,11 +24,17 @@ createRoot(document.getElementById('root')!).render(
             <Toast.Provider>
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<QuizzesListPage />} />
-                        <Route path="/quiz/:quizId" element={<QuizPage />} />
-                        <Route path="quiz/:gameId/play" element={<GamePage />} />
-                        <Route path="quiz/:gameId/play/backup" element={<GameBackupPage />} />
-                        <Route path="/login" element={<SignInPage />} />
+                        {/* Auth Routes*/}
+                        <Route path="/" element={<AuthGuard component={() => <QuizzesListPage />} />} />
+                        <Route path="/quiz/:quizId" element={<AuthGuard component={() => <QuizPage />} />} />
+                        <Route path="quiz/:gameId/play" element={<AuthGuard component={() => <GamePage />} />} />
+                        <Route
+                            path="quiz/:gameId/play/backup"
+                            element={<AuthGuard component={() => <GameBackupPage />} />}
+                        />
+                        {/* UnAuth routes */}
+                        <Route path="/login" element={<UnAuthGuard component={() => <SignInPage />} />} />
+                        {/* Wildcard*/}
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </BrowserRouter>

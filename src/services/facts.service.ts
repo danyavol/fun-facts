@@ -33,6 +33,8 @@ export function useQuizFacts(quizId: string) {
 
         (async () => {
             const user = await getCurrentUser();
+            if (!user) return;
+
             unsubscribe = onSnapshot(
                 query(
                     collection(getFirestore(), `facts`),
@@ -68,6 +70,10 @@ export function useCreateFact() {
     async function createFact(params: { text: string; quizId: string }) {
         setIsLoading(true);
         const user = await getCurrentUser();
+        if (!user) {
+            setIsLoading(false);
+            throw new Error('Unauthorized');
+        }
 
         const factData: Omit<Fact, 'id'> = {
             ...params,

@@ -83,6 +83,8 @@ export function useGamePlayerSelection(gameId: string) {
     async function selectPlayer(playerId: string, me: Player | null) {
         if (me?.userId) await deselectPlayer(me.id);
         const user = await getCurrentUser();
+        if (!user) throw new Error('Unauthorized');
+
         // TODO: Fails when givenAnswers is not empty in firestore
         await setDoc(
             doc(getFirestore(), `/games/${gameId}/players/${playerId}`),

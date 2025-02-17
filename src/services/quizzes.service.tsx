@@ -8,7 +8,7 @@ import {
     deleteDoc,
     query,
     orderBy,
-    Timestamp
+    Timestamp,
 } from 'firebase/firestore';
 import { Badge } from '@radix-ui/themes';
 import { useEffect, useState } from 'react';
@@ -89,10 +89,14 @@ export function useQuiz(quizId: string) {
         const unsubscribe = onSnapshot(
             doc(getFirestore(), `quizzes/${quizId}`),
             (snapshot) => {
-                setQuiz(snapshot.exists() ? {
-                    id: snapshot.id,
-                    ...snapshot.data(),
-                } as Quiz : null);
+                setQuiz(
+                    snapshot.exists()
+                        ? ({
+                              id: snapshot.id,
+                              ...snapshot.data(),
+                          } as Quiz)
+                        : null
+                );
                 setIsLoading(false);
             },
             (e) => {
@@ -114,15 +118,17 @@ export function useCreateQuiz() {
         setIsLoading(true);
         const user = await getCurrentUser();
 
-        const quizData: Omit<Quiz, 'totalFacts' | 'id'> = {
-            ...params,
-            ownerId: user.uid,
-            status: 'open',
-            createdAt: Timestamp.now(),
-            updatedAt: Timestamp.now(),
-        };
-
         try {
+            if (!user) throw new Error('Unauthorized');
+
+            const quizData: Omit<Quiz, 'totalFacts' | 'id'> = {
+                ...params,
+                ownerId: user.uid,
+                status: 'open',
+                createdAt: Timestamp.now(),
+                updatedAt: Timestamp.now(),
+            };
+
             await addDoc(collection(getFirestore(), `quizzes`), quizData);
         } finally {
             setIsLoading(false);

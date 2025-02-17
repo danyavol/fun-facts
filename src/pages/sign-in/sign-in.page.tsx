@@ -1,51 +1,38 @@
-import { signInAnonymous, signInViaGoogle, signOut, useCurrentUser } from '../../services/auth.service.ts';
-import { Avatar, Badge, Box, Button, Container, Flex, IconButton, Spinner, Text } from '@radix-ui/themes';
-import { ArrowLeftIcon, PersonIcon } from '@radix-ui/react-icons';
-import { NavLink } from 'react-router';
+import { useSignInAnonymously, useSignInViaGoogle } from '../../services/auth.service.ts';
+import { Button, Container, Flex, Heading, Spinner } from '@radix-ui/themes';
+import Incognito from '../../icons/incognito.svg?react';
+import Google from '../../icons/google.svg?react';
+import { useMemo } from 'react';
 
 export function SignInPage() {
-    const { user, isLoading, isAdmin } = useCurrentUser();
+    const { signInAnonymous, isLoading: guestIsLoading } = useSignInAnonymously();
+    const { signInViaGoogle, isLoading: googleIsLoading } = useSignInViaGoogle();
+
+    const isDisabled = useMemo(() => guestIsLoading || googleIsLoading, [guestIsLoading, googleIsLoading]);
+
     return (
-        <Container size="2" p="4">
-            <Box className="main-container" p="5">
-                <IconButton asChild variant="ghost" size="2" mb="3">
-                    <NavLink to={'/'}>
-                        <ArrowLeftIcon width={24} height={24} />
-                    </NavLink>
-                </IconButton>
-                {isLoading && <Spinner />}
-                {!isLoading && (
-                    <Flex align="center" justify="between">
-                        {!user && <Text weight="bold">Unauthorized</Text>}
-                        {user?.isAnonymous && (
-                            <Flex gap="3" align="center">
-                                <Avatar fallback="A" />
-                                <Text weight="bold">Anonymous</Text>
-                            </Flex>
-                        )}
-                        {user?.providerData.map((data) => (
-                            <Flex gap="3" align="center" key={data.uid}>
-                                <Avatar
-                                    src={data.photoURL ?? undefined}
-                                    fallback={<PersonIcon width={24} height={24} />}
-                                />
-                                <Flex direction="column">
-                                    <Flex gap="1" align="center">
-                                        <Text weight="bold">{data.displayName}</Text>
-                                        {isAdmin && <Badge color="red">Admin</Badge>}
-                                    </Flex>
-                                    <Text trim="both">{data.email}</Text>
-                                </Flex>
-                            </Flex>
-                        ))}
-                        <Flex gap="3">
-                            {!user && <Button onClick={signInAnonymous}>Anonymous Sign In</Button>}
-                            {user && !user.isAnonymous && <Button onClick={signOut}>Sign Out</Button>}
-                            {(!user || user.isAnonymous) && <Button onClick={signInViaGoogle}>Google Sign In</Button>}
-                        </Flex>
-                    </Flex>
-                )}
-            </Box>
+        <Container size="1" p="4">
+            <Flex className="main-container" p="5" direction="column" gap="3">
+                <Flex gap="3" align="center" justify="center" mb="3">
+                    <img height="32" src="public/favicon/android-chrome-192x192.png" />
+                    <Heading color="indigo">Fun Facts</Heading>
+                </Flex>
+                <Button onClick={signInAnonymous} disabled={isDisabled} size="3">
+                    {guestIsLoading ? <Spinner /> : <Incognito />}
+                    Войти как Гость
+                </Button>
+                <Button
+                    onClick={signInViaGoogle}
+                    variant="outline"
+                    color="gray"
+                    highContrast
+                    disabled={isDisabled}
+                    size="3"
+                >
+                    {googleIsLoading ? <Spinner /> : <Google />}
+                    Войти через Google
+                </Button>
+            </Flex>
         </Container>
     );
 }

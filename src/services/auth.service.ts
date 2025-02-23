@@ -2,6 +2,8 @@ import {
     getAuth,
     onAuthStateChanged,
     signInAnonymously,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
     User,
     GoogleAuthProvider,
     signInWithPopup,
@@ -45,26 +47,78 @@ export function useCurrentUser() {
 
 export function useSignInViaGoogle() {
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
     async function signInViaGoogle() {
         setIsLoading(true);
-        await signInWithPopup(getAuth(), new GoogleAuthProvider());
-        setIsLoading(false);
+        setError('');
+        try {
+            await signInWithPopup(getAuth(), new GoogleAuthProvider());
+        } catch (e) {
+            setError(getErrorMessage(e));
+        } finally {
+            setIsLoading(false);
+        }
     }
 
-    return { signInViaGoogle, isLoading };
+    return { signInViaGoogle, isLoading, error };
 }
 
 export function useSignInAnonymously() {
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
     async function signInAnonymous() {
         setIsLoading(true);
-        await signInAnonymously(getAuth());
-        setIsLoading(false);
+        setError('');
+        try {
+            await signInAnonymously(getAuth());
+        } catch (e) {
+            setError(getErrorMessage(e));
+        } finally {
+            setIsLoading(false);
+        }
     }
 
-    return { signInAnonymous, isLoading };
+    return { signInAnonymous, isLoading, error };
+}
+
+export function useSignInWithPassword() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    async function signInWithPassword(email: string, password: string) {
+        setIsLoading(true);
+        setError('');
+        try {
+            await signInWithEmailAndPassword(getAuth(), email, password);
+        } catch (e) {
+            setError(getErrorMessage(e));
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return { signInWithPassword, isLoading, error };
+}
+
+export function useCreateNewPasswordAccount() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    async function createNewPasswordAccount(email: string, password: string) {
+        setIsLoading(true);
+        setError('');
+        try {
+            await createUserWithEmailAndPassword(getAuth(), email, password);
+        } catch (e) {
+            setError(getErrorMessage(e));
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return { createNewPasswordAccount, isLoading, error };
 }
 
 export function useSignOut() {
@@ -77,4 +131,21 @@ export function useSignOut() {
     }
 
     return { signOut, isLoading };
+}
+
+function getErrorMessage(error: unknown) {
+    if (error && typeof error === 'object' && 'code' in error && typeof error.code === 'string') {
+        switch (error.code) {
+            case 'auth/invalid-email':
+                return 'Неверный адрес эл. почты';
+            case 'auth/invalid-credential':
+                return 'Неверная эл. почта или пароль';
+            case 'auth/weak-password':
+                return 'Слишком слабый пароль';
+            default:
+                return error.code;
+        }
+    } else {
+        return 'Произошла неизвестная ошибка';
+    }
 }

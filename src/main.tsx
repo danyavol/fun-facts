@@ -17,6 +17,7 @@ import * as Toast from '@radix-ui/react-toast';
 import { ToastViewport } from '@radix-ui/react-toast';
 import { AuthGuard } from './guards/auth.guard.tsx';
 import { UnAuthGuard } from './guards/unauth.guard.tsx';
+import { CreateAccountPage } from './pages/create-account/create-account-page.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -34,6 +35,10 @@ createRoot(document.getElementById('root')!).render(
                         />
                         {/* UnAuth routes */}
                         <Route path="/login" element={<UnAuthGuard component={() => <SignInPage />} />} />
+                        <Route
+                            path="/create-account"
+                            element={<UnAuthGuard component={() => <CreateAccountPage />} />}
+                        />
                         {/* Wildcard*/}
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>

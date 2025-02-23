@@ -4,6 +4,7 @@ import Incognito from '../../icons/incognito.svg?react';
 import { ExitIcon, PersonIcon } from '@radix-ui/react-icons';
 import { useCurrentUser, useSignOut } from '../../services/auth.service.ts';
 import { useState } from 'react';
+import { Logo } from '../logo/logo.tsx';
 
 export const Header = () => {
     const { user, isAdmin } = useCurrentUser();
@@ -17,10 +18,7 @@ export const Header = () => {
     return (
         <Container size="2" pt="4" pl="4" pr="4">
             <Flex className="main-container" px="5" py="3" justify="between" align="center">
-                <Flex gap="3" align="baseline">
-                    <img height="30" src="/assets/logo.svg" alt="App logo" />
-                    <img height="26" src="/assets/fun-facts.svg" alt="App title" />
-                </Flex>
+                <Logo />
 
                 <DropdownMenu.Root open={isOpen}>
                     <DropdownMenu.Trigger>

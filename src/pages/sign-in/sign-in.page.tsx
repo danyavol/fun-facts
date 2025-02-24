@@ -113,7 +113,7 @@ export function SignInPage() {
                     {googleIsLoading ? <Spinner /> : <Google />}
                     Войти через Google
                 </Button>
-                <Button onClick={signInAnonymous} disabled={isDisabled} size="3" color="purple" highContrast>
+                <Button onClick={signInAnonymous} disabled={isDisabled} variant="outline" size="3" color="gray">
                     {guestIsLoading ? <Spinner /> : <Incognito />}
                     Войти как Гость
                 </Button>

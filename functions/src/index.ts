@@ -12,6 +12,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { onDocumentWritten, onDocumentDeleted, onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { beforeUserCreated } from 'firebase-functions/v2/identity';
+import { user } from 'firebase-functions/v1/auth';
 
 initializeApp();
 
@@ -111,8 +112,11 @@ export const populateUserProfile = beforeUserCreated({ region: 'europe-central2'
     const profile = {
         quizzes: [],
     };
-    const userProfileRef = getFirestore().doc(`/user-profiles/${user.uid}`);
-    await userProfileRef.set(profile);
+    await getFirestore().doc(`/user-profiles/${user.uid}`).set(profile);
+});
+
+export const deleteUserProfile = user().onDelete(async (user) => {
+    await getFirestore().doc(`/user-profiles/${user.uid}`).delete();
 });
 
 async function createNewGame(quizId: string, quizData: FirebaseFirestore.DocumentData) {

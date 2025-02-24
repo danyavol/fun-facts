@@ -11,8 +11,7 @@ import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { onDocumentWritten, onDocumentDeleted, onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { getStorage } from 'firebase-admin/storage';
-import { user } from 'firebase-functions/v1/auth';
-import { UserProfile } from '../../src/services/user-profile.service';
+import { beforeUserCreated } from 'firebase-functions/v2/identity';
 
 initializeApp();
 
@@ -104,15 +103,15 @@ export const createGame = onDocumentWritten(
     }
 );
 
-export const populateUserProfile = user().beforeCreate(async (event) => {
-    const { uid } = event;
+export const populateUserProfile = beforeUserCreated({ region: 'europe-central2' }, async (event) => {
+    const user = event.data;
 
-    const userProfileRef = getFirestore().doc(`/user-profiles/${uid}`);
+    if (!user) return;
 
-    const profile: Omit<UserProfile, 'id'> = {
+    const profile = {
         quizzes: [],
     };
-
+    const userProfileRef = getFirestore().doc(`/user-profiles/${user.uid}`);
     await userProfileRef.set(profile);
 });
 

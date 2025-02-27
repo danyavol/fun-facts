@@ -37,6 +37,7 @@ export function QuizPage() {
     }, [isEditFactLoading]);
 
     const canEdit = isAdmin || quiz?.ownerId === user?.uid;
+    const disableEditing = ['started', 'ended'].includes(quiz?.status ?? '');
 
     if (!isLoading && !quiz) {
         navigate('/');
@@ -92,7 +93,7 @@ export function QuizPage() {
                             )}
                             {quiz && canEdit && (
                                 <Flex gap="4" justify="end" align="center">
-                                    <EditQuizButton quiz={quiz} />
+                                    <EditQuizButton quiz={quiz} disabled={disableEditing} />
                                     <DeleteQuizButton quizId={quiz.id} name={quiz.name} />
                                 </Flex>
                             )}

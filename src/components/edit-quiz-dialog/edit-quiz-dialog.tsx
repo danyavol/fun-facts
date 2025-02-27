@@ -5,7 +5,7 @@ import { QuizForm } from '../quiz-form/quiz-form.tsx';
 import { QuizFormData } from '../quiz-form/default-quiz-form-value.ts';
 import { Pencil2Icon } from '@radix-ui/react-icons';
 
-export function EditQuizButton({ quiz }: { quiz: Quiz }) {
+export function EditQuizButton({ quiz, disabled }: { quiz: Quiz; disabled: boolean }) {
     const [value, setValue] = useState<QuizFormData>({
         name: quiz.name,
         answers: quiz.answers,
@@ -25,7 +25,7 @@ export function EditQuizButton({ quiz }: { quiz: Quiz }) {
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger>
+            <Dialog.Trigger disabled={disabled}>
                 <IconButton variant="ghost" size="2">
                     <Pencil2Icon width="20" height="20" />
                 </IconButton>

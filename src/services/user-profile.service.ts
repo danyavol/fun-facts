@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
-import { doc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
-import { useCurrentUser } from './auth.service';
+import { doc, getFirestore, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
+import { getCurrentUser, useCurrentUser } from './auth.service';
 
 export type UserProfile = {
     id: string;
+} & UserProfileRaw;
+
+type UserProfileRaw = {
     quizzes: string[];
 };
+
+const getProfileLink = (userId: string) => `user-profiles/${userId}`;
 
 export function useCurrentUserProfile() {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -15,11 +20,11 @@ export function useCurrentUserProfile() {
         if (!user) return;
 
         const unsubscribe = onSnapshot(
-            doc(getFirestore(), `user-profiles/${user.uid}`),
+            doc(getFirestore(), getProfileLink(user.uid)),
             (snapshot) => {
                 if (!snapshot.exists()) {
                     // guests doesn't have profile by default
-                    setDoc(doc(getFirestore(), `user-profiles/${user.uid}`), { quizzes: [] });
+                    setDoc(doc(getFirestore(), getProfileLink(user.uid)), { quizzes: [] });
                     return;
                 }
                 setUserProfile({
@@ -38,20 +43,16 @@ export function useCurrentUserProfile() {
     return { userProfile };
 }
 
-export function useEditUserProfile() {
-    const { user } = useCurrentUser();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+export async function joinQuiz(quizId: string) {
+    const user = await getCurrentUser();
+    if (!user) throw Error('Must not be called for unauthorized user');
 
-    async function editUserProfile(params: Partial<Omit<UserProfile, 'id'>>) {
-        if (!user) return;
+    const profile = await getDoc(doc(getFirestore(), getProfileLink(user.uid)));
+    const data = profile.data() as UserProfileRaw;
 
-        setIsLoading(true);
-        try {
-            await setDoc(doc(getFirestore(), `user-profiles/${user.uid}`), params, { merge: true });
-        } finally {
-            setIsLoading(false);
-        }
-    }
+    const quizzesSet = new Set(data.quizzes);
+    if (quizzesSet.has(quizId)) return;
 
-    return { editUserProfile, isLoading };
+    quizzesSet.add(quizId);
+    await setDoc(doc(getFirestore(), getProfileLink(user.uid)), { quizzes: Array.from(quizzesSet) });
 }

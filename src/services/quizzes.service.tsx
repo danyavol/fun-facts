@@ -15,7 +15,7 @@ import {
 import { Badge } from '@radix-ui/themes';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
-import { useCurrentUserProfile, useEditUserProfile } from './user-profile.service.ts';
+import { joinQuiz, useCurrentUserProfile } from './user-profile.service.ts';
 
 export type Quiz = {
     id: string;
@@ -98,8 +98,6 @@ export function useQuizzesList() {
 export function useQuiz(quizId: string) {
     const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const { editUserProfile } = useEditUserProfile();
-    const { userProfile } = useCurrentUserProfile();
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
@@ -113,6 +111,7 @@ export function useQuiz(quizId: string) {
                           } as Quiz)
                         : null
                 );
+                if (snapshot.exists()) joinQuiz(quizId);
                 setIsLoading(false);
             },
             (e) => {
@@ -124,21 +123,11 @@ export function useQuiz(quizId: string) {
         return () => unsubscribe();
     }, [quizId]);
 
-    useEffect(() => {
-        if (userProfile) {
-            const quizzes = new Set(userProfile.quizzes);
-            quizzes.add(quizId);
-
-            editUserProfile({ quizzes: Array.from(quizzes) });
-        }
-    }, [userProfile, editUserProfile, quizId]);
-
     return { quiz, isLoading };
 }
 
 export function useCreateQuiz() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    // TODO: Save quiz in userProfile once created
 
     async function createQuiz(params: { name: string; answers: string[] }) {
         setIsLoading(true);
@@ -155,7 +144,8 @@ export function useCreateQuiz() {
                 updatedAt: Timestamp.now(),
             };
 
-            await addDoc(collection(getFirestore(), `quizzes`), quizData);
+            const result = await addDoc(collection(getFirestore(), `quizzes`), quizData);
+            await joinQuiz(result.id);
         } finally {
             setIsLoading(false);
         }

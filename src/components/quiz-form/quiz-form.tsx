@@ -24,7 +24,7 @@ export function QuizForm({
     const [factsLimit, setFactsLimit] = useState(value.factsLimit);
 
     // Do not allow to decrease number of facts for existing quizzes
-    const minimumAllowedFacts = type === 'edit' ? value.factsLimit : 1;
+    const minimumAllowedFacts = type === 'edit' ? (value.factsLimit ?? 1) : 1;
 
     useEffect(() => {
         setName(value.name ?? '');
@@ -143,12 +143,21 @@ export function QuizForm({
                     max={5}
                 />
                 <Flex justify="between" className={styles.sliderLabels} mt="1">
-                    <div></div>
-                    <div className={minimumAllowedFacts > 1 ? styles.disabled : ''}>1</div>
-                    <div className={minimumAllowedFacts > 2 ? styles.disabled : ''}>2</div>
-                    <div className={minimumAllowedFacts > 3 ? styles.disabled : ''}>3</div>
-                    <div className={minimumAllowedFacts > 4 ? styles.disabled : ''}>4</div>
-                    <div>5</div>
+                    <div>{/* Empty element */}</div>
+                    {[1, 2, 3, 4, 5].map((number) => {
+                        const isDisabled = minimumAllowedFacts > number;
+                        return (
+                            <div
+                                key={number}
+                                className={isDisabled ? styles.disabled : ''}
+                                onClick={() => {
+                                    if (!isDisabled) setFactsLimit(number);
+                                }}
+                            >
+                                {number}
+                            </div>
+                        );
+                    })}
                 </Flex>
             </Flex>
 

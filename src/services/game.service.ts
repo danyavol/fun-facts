@@ -12,6 +12,7 @@ import {
     where,
 } from 'firebase/firestore';
 import { getCurrentUser, useCurrentUser } from './auth.service.ts';
+import { endQuiz } from './quizzes.service.tsx';
 import { useEffect, useState } from 'react';
 import { getRealTimeOffset } from '../utils/time-sync.ts';
 
@@ -125,11 +126,14 @@ export async function showNextFact(game: Game, factId: string) {
     } as Partial<Game>);
 }
 
-export async function endQuiz(game: Game) {
-    await updateDoc(doc(getFirestore(), `/games/${game.id}`), {
-        status: 'ended',
-        displayedFact: null,
-    } as Partial<Game>);
+export async function endQuizAndGame(game: Game) {
+    await Promise.all([
+        updateDoc(doc(getFirestore(), `/games/${game.id}`), {
+            status: 'ended',
+            displayedFact: null,
+        } as Partial<Game>),
+        endQuiz(game.id),
+    ]);
 }
 
 export async function voteForFact(gameId: string, playerId: string, factId: string, answerId: string) {

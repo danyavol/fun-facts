@@ -1,5 +1,5 @@
 import {
-    endQuiz,
+    endQuizAndGame,
     Game,
     Player,
     setCorrectAnswer,
@@ -155,7 +155,7 @@ export function FactResults({ players, me, game, fact }: FactResultsType) {
                                             </Button>
                                         </AlertDialog.Cancel>
                                         <AlertDialog.Action>
-                                            <Button variant="solid" color="red" onClick={() => endQuiz(game)}>
+                                            <Button variant="solid" color="red" onClick={() => endQuizAndGame(game)}>
                                                 Завершить квиз
                                             </Button>
                                         </AlertDialog.Action>

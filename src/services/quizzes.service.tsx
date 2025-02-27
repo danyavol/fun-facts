@@ -29,23 +29,24 @@ export type Quiz = {
     status: 'open' | 'started' | 'ended';
 };
 
-export function getStatusName(status: Quiz['status']) {
+export function getStatusName(status: Quiz['status'], disabled = false) {
+    const variant = disabled ? 'soft' : 'solid';
     switch (status) {
         case 'open':
             return (
-                <Badge color="amber" size="2" variant="solid">
+                <Badge color={disabled ? 'gray' : 'amber'} size="2" variant={variant}>
                     Подготовка
                 </Badge>
             );
         case 'started':
             return (
-                <Badge color="green" size="2" variant="solid">
+                <Badge color={disabled ? 'gray' : 'green'} size="2" variant={variant}>
                     Квиз начался!
                 </Badge>
             );
         case 'ended':
             return (
-                <Badge color="red" size="2" variant="solid">
+                <Badge color={disabled ? 'gray' : 'red'} size="2" variant={variant}>
                     Квиз окончен
                 </Badge>
             );
@@ -177,6 +178,10 @@ export function useEditQuiz() {
     }
 
     return { editQuiz, isLoading };
+}
+
+export async function endQuiz(quizId: string) {
+    await updateDoc(doc(getFirestore(), `quizzes/${quizId}`), { status: 'ended' } as Partial<Quiz>);
 }
 
 export function useDeleteQuiz() {

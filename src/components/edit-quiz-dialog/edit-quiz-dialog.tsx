@@ -31,13 +31,15 @@ export function EditQuizButton({ quiz }: { quiz: Quiz }) {
                 </IconButton>
             </Dialog.Trigger>
 
-            <QuizForm
-                onCancel={() => setOpen(false)}
-                onConfirm={editQuizHandler}
-                isLoading={isLoading}
-                type="edit"
-                value={value}
-            />
+            {open && (
+                <QuizForm
+                    onCancel={() => setOpen(false)}
+                    onConfirm={editQuizHandler}
+                    isLoading={isLoading}
+                    type="edit"
+                    value={value}
+                />
+            )}
         </Dialog.Root>
     );
 }

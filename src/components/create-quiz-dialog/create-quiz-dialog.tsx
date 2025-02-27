@@ -27,13 +27,15 @@ export function CreateQuizButton() {
                 </Button>
             </Tooltip>
             <Dialog.Root open={open} onOpenChange={setOpen}>
-                <QuizForm
-                    onCancel={() => setOpen(false)}
-                    onConfirm={createNewQuiz}
-                    isLoading={isLoading}
-                    type="new"
-                    value={value}
-                />
+                {open && (
+                    <QuizForm
+                        onCancel={() => setOpen(false)}
+                        onConfirm={createNewQuiz}
+                        isLoading={isLoading}
+                        type="new"
+                        value={value}
+                    />
+                )}
             </Dialog.Root>
         </>
     );

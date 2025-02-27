@@ -67,6 +67,8 @@ export function QuizPage() {
         );
     }
 
+    const totalFacts = quiz?.totalFacts ?? 0;
+
     return (
         <Container size="2" p="4">
             <Box className="main-container" p="5">
@@ -101,13 +103,13 @@ export function QuizPage() {
                                 <Flex align="center" gap="2">
                                     <Text>Этап:</Text>
                                     {canEdit ? (
-                                        <QuizStatusSelect quiz={quiz} />
+                                        <QuizStatusSelect quiz={quiz} totalFacts={totalFacts} />
                                     ) : (
                                         <strong>{getStatusName(quiz.status)}</strong>
                                     )}
                                 </Flex>
                                 <Text align="right">
-                                    Всего фактов в квизе: <strong>{quiz.totalFacts ?? 0}</strong>
+                                    Всего фактов в квизе: <strong>{totalFacts}</strong>
                                 </Text>
                             </Flex>
                         )}
@@ -117,7 +119,12 @@ export function QuizPage() {
                                 <Callout.Icon>
                                     <CrossCircledIcon />
                                 </Callout.Icon>
-                                <Callout.Text>Квиз уже окончен 🥺</Callout.Text>
+                                <Callout.Text>
+                                    Квиз уже окончен 🥺{' '}
+                                    <Link asChild color="red" weight="bold" underline="always">
+                                        <NavLink to={'play'}>Результаты</NavLink>
+                                    </Link>
+                                </Callout.Text>
                             </Callout.Root>
                         )}
                         {quiz?.status === 'started' && (

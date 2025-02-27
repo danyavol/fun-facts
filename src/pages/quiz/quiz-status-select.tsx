@@ -1,8 +1,10 @@
 import { AlertDialog, Button, Flex, Text, Select } from '@radix-ui/themes';
 import { getStatusName, Quiz, useEditQuiz } from '../../services/quizzes.service.tsx';
 import { useState } from 'react';
+import { LockClosedIcon } from '@radix-ui/react-icons';
+import styles from './quiz-status-select.module.scss';
 
-export function QuizStatusSelect({ quiz }: { quiz: Quiz }) {
+export function QuizStatusSelect({ quiz, totalFacts }: { quiz: Quiz; totalFacts: number }) {
     const { editQuiz, isLoading } = useEditQuiz();
     const [pendingValue, setPendingValue] = useState<Quiz['status']>(quiz.status);
     const [open, setOpen] = useState(false);
@@ -22,14 +24,27 @@ export function QuizStatusSelect({ quiz }: { quiz: Quiz }) {
         setOpen(false);
     }
 
+    const openEnabled = ['open', 'started'].includes(quiz.status);
+    const startedEnabled = quiz.status !== 'ended' && totalFacts > 0;
+    const endedEnabled = quiz.status === 'ended';
+
     return (
         <>
             <Select.Root value={quiz.status} onValueChange={(status: Quiz['status']) => changeValue(status)}>
                 <Select.Trigger />
                 <Select.Content variant="soft">
-                    <Select.Item value="open">{getStatusName('open')}</Select.Item>
-                    <Select.Item value="started">{getStatusName('started')}</Select.Item>
-                    <Select.Item value="ended">{getStatusName('ended')}</Select.Item>
+                    <Select.Item value="open" disabled={!openEnabled}>
+                        {!openEnabled && <LockClosedIcon className={styles.statusLock} />}
+                        {getStatusName('open', !openEnabled)}
+                    </Select.Item>
+                    <Select.Item value="started" disabled={!startedEnabled}>
+                        {!startedEnabled && <LockClosedIcon className={styles.statusLock} />}
+                        {getStatusName('started', !startedEnabled)}
+                    </Select.Item>
+                    <Select.Item value="ended" disabled={!endedEnabled}>
+                        {!endedEnabled && <LockClosedIcon className={styles.statusLock} />}
+                        {getStatusName('ended', !endedEnabled)}
+                    </Select.Item>
                 </Select.Content>
             </Select.Root>
 

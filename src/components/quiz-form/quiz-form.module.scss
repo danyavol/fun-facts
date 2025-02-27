@@ -1,0 +1,10 @@
+.sliderLabels > * {
+    width: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.disabled {
+    color: var(--gray-8);
+    font-weight: normal;
+}

@@ -9,7 +9,7 @@ export function CreateQuizButton() {
     const [value, setValue] = useState<QuizFormData>(getDefaultQuizValue());
     const [open, setOpen] = useState(false);
     const { createQuiz, isLoading } = useCreateQuiz();
-    const { isAdmin } = useCurrentUser();
+    const { user } = useCurrentUser();
 
     async function createNewQuiz(form: QuizFormData) {
         await createQuiz(form);
@@ -19,8 +19,10 @@ export function CreateQuizButton() {
 
     return (
         <>
-            <Tooltip content={!isAdmin ? 'Только администратор может создавать новые квизы' : 'Создать новый квиз'}>
-                <Button disabled={!isAdmin} onClick={() => setOpen(true)}>
+            <Tooltip
+                content={!user || user?.isAnonymous ? 'Гости не могут создавать новые квизы' : 'Создать новый квиз'}
+            >
+                <Button disabled={!user || user?.isAnonymous} onClick={() => setOpen(true)}>
                     Создать квиз
                 </Button>
             </Tooltip>

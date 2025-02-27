@@ -21,6 +21,7 @@ export type Quiz = {
     id: string;
     name: string;
     answers: string[];
+    factsLimit: number;
     ownerId: string;
     totalFacts?: number;
     createdAt: Timestamp;
@@ -129,7 +130,7 @@ export function useQuiz(quizId: string) {
 export function useCreateQuiz() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    async function createQuiz(params: { name: string; answers: string[] }) {
+    async function createQuiz(params: { name: string; answers: string[]; factsLimit: number }) {
         setIsLoading(true);
         const user = await getCurrentUser();
 

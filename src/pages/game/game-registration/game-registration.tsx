@@ -14,7 +14,9 @@ type GameRegistrationProps = {
 
 export function GameRegistration({ game, players, me }: GameRegistrationProps) {
     const { selectPlayer, deselectPlayer } = useGamePlayerSelection(game.id);
-    const { isAdmin } = useCurrentUser();
+    const { isAdmin, user } = useCurrentUser();
+
+    const canEdit = isAdmin || game.ownerId === user?.uid;
 
     return (
         <>
@@ -63,7 +65,7 @@ export function GameRegistration({ game, players, me }: GameRegistrationProps) {
                     );
                 })}
             </Flex>
-            {isAdmin && (
+            {canEdit && (
                 <>
                     <Separator size="4" mt="5" mb="3" />
                     <Flex justify="end">

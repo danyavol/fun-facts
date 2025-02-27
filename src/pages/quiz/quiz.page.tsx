@@ -18,8 +18,6 @@ import { ruPluralText } from '../../utils/plural.ts';
 import { useCurrentUser } from '../../services/auth.service.ts';
 import { QuizStatusSelect } from './quiz-status-select.tsx';
 
-const maxFacts = 3;
-
 export function QuizPage() {
     const params = useParams();
     const quizId = params.quizId || '';
@@ -102,7 +100,7 @@ export function QuizPage() {
                             <Flex justify="between" align="center" gap="3">
                                 <Flex align="center" gap="2">
                                     <Text>Этап:</Text>
-                                    {isAdmin ? (
+                                    {canEdit ? (
                                         <QuizStatusSelect quiz={quiz} />
                                     ) : (
                                         <strong>{getStatusName(quiz.status)}</strong>
@@ -158,13 +156,13 @@ export function QuizPage() {
                             </Callout.Root>
                         )}
 
-                        {facts.length < maxFacts && quiz?.status === 'open' && (
+                        {quiz && facts.length < quiz.factsLimit && quiz?.status === 'open' && (
                             <>
                                 <Callout.Root my="2" size="2" color="yellow">
                                     <Callout.Icon>
                                         <ExclamationTriangleIcon />
                                     </Callout.Icon>
-                                    <Callout.Text>{addMoreFactsText(maxFacts - facts.length)}</Callout.Text>
+                                    <Callout.Text>{addMoreFactsText(quiz.factsLimit - facts.length)}</Callout.Text>
                                 </Callout.Root>
 
                                 <FactForm

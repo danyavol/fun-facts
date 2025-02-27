@@ -22,7 +22,10 @@ type FactResultsType = {
 };
 
 export function FactResults({ players, me, game, fact }: FactResultsType) {
-    const { isAdmin } = useCurrentUser();
+    const { isAdmin, user } = useCurrentUser();
+
+    const canEdit = isAdmin || game.ownerId === user?.uid;
+
     const myAnswerId = me.givenAnswers[fact.id];
     const correctAnswerId: string | undefined = game.correctAnswers[fact.id];
 
@@ -92,7 +95,7 @@ export function FactResults({ players, me, game, fact }: FactResultsType) {
                     );
                 })}
             </Box>
-            {isAdmin && (
+            {canEdit && (
                 <>
                     <Separator size="4" my="4" />
                     <Text as="p" size="2" mb="2" weight="bold">

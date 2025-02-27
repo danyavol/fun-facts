@@ -16,7 +16,7 @@ export function QuizzesListPage() {
             <Container size="2" p="4">
                 <Box className="main-container" p="5">
                     <Flex justify="between" align="center" mb="3">
-                        <Heading size="4">Выбери квиз:</Heading>
+                        <Heading size="4">Твои квизы</Heading>
                         <CreateQuizButton />
                     </Flex>
 
@@ -48,7 +48,12 @@ export function QuizzesListPage() {
                             ))}
                         {!isLoading && quizzes.length == 0 && (
                             <Text align="center" color="gray">
-                                Еще нету ни одного квиза
+                                Ты не участвуешь ни в одном квизе.
+                                <br />
+                                <br />
+                                Создай новый или
+                                <br />
+                                попроси друга поделиться ссылкой
                             </Text>
                         )}
                     </Flex>

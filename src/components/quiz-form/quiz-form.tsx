@@ -1,7 +1,8 @@
-import { Box, Button, Dialog, Flex, IconButton, Text, TextField } from '@radix-ui/themes';
+import { Box, Button, Dialog, Flex, IconButton, Slider, Text, TextField } from '@radix-ui/themes';
 import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { getDefaultQuizValue, QuizFormData } from './default-quiz-form-value.ts';
+import styles from './quiz-form.module.scss';
 
 type QuizFormProps = {
     type: 'new' | 'edit';
@@ -20,10 +21,15 @@ export function QuizForm({
 }: QuizFormProps) {
     const [name, setName] = useState(value.name);
     const [answers, setAnswers] = useState<string[]>(value.answers);
+    const [factsLimit, setFactsLimit] = useState(value.factsLimit);
+
+    // Do not allow to decrease number of facts for existing quizzes
+    const minimumAllowedFacts = type === 'edit' ? value.factsLimit : 1;
 
     useEffect(() => {
         setName(value.name ?? '');
         setAnswers(value.answers ?? []);
+        setFactsLimit(value.factsLimit ?? 3);
     }, [value]);
 
     async function submit() {
@@ -35,7 +41,7 @@ export function QuizForm({
             return result;
         }, [] as string[]);
 
-        onConfirm({ name, answers: trimmedAnswers });
+        onConfirm({ name, answers: trimmedAnswers, factsLimit: factsLimit });
     }
 
     function answersValid() {
@@ -70,7 +76,7 @@ export function QuizForm({
 
             <Flex direction="column" gap="3" mb="4">
                 <label>
-                    <Text as="div" size="2" mb="2" weight="bold">
+                    <Text as="div" size="2" weight="bold" mb="1">
                         Название
                     </Text>
                     <TextField.Root
@@ -83,10 +89,10 @@ export function QuizForm({
                 </label>
             </Flex>
 
-            <Flex justify="between" mb="2" align="center">
+            <Flex justify="between" mb="2" align="end">
                 <Box>
                     <Text as="div" size="2" weight="bold">
-                        Имена участников
+                        Имена игроков
                     </Text>
                     <Text as="div" size="2" color="gray" trim="both">
                         Используются в качестве ответов в квизе
@@ -98,7 +104,7 @@ export function QuizForm({
                 </IconButton>
             </Flex>
 
-            <Flex direction="column" gap="2">
+            <Flex direction="column" gap="2" mb="4">
                 {answers.map((answer, answerId) => (
                     <Flex align="center" gap="2" key={answerId}>
                         <Box flexGrow="1">
@@ -113,6 +119,37 @@ export function QuizForm({
                         </IconButton>
                     </Flex>
                 ))}
+            </Flex>
+
+            <Flex direction="column">
+                <Box mb="1">
+                    <Text as="div" size="2" weight="bold">
+                        Лимит фактов для игрока
+                    </Text>
+                    {type === 'edit' && (
+                        <Text as="div" size="2" color="gray" trim="both" mb="2">
+                            Нельзя уменьшать количество фактов
+                        </Text>
+                    )}
+                </Box>
+                <Slider
+                    value={[factsLimit]}
+                    onValueChange={([value]) => {
+                        if (value < minimumAllowedFacts) return;
+                        setFactsLimit(value);
+                    }}
+                    size="2"
+                    min={0}
+                    max={5}
+                />
+                <Flex justify="between" className={styles.sliderLabels} mt="1">
+                    <div></div>
+                    <div className={minimumAllowedFacts > 1 ? styles.disabled : ''}>1</div>
+                    <div className={minimumAllowedFacts > 2 ? styles.disabled : ''}>2</div>
+                    <div className={minimumAllowedFacts > 3 ? styles.disabled : ''}>3</div>
+                    <div className={minimumAllowedFacts > 4 ? styles.disabled : ''}>4</div>
+                    <div>5</div>
+                </Flex>
             </Flex>
 
             <Flex gap="3" mt="4" justify="end">

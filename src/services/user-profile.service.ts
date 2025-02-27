@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { doc, getFirestore, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
+import { doc, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
 import { getCurrentUser, useCurrentUser } from './auth.service';
 
 export type UserProfile = {
@@ -46,13 +46,16 @@ export function useCurrentUserProfile() {
 export async function joinQuiz(quizId: string) {
     const user = await getCurrentUser();
     if (!user) throw Error('Must not be called for unauthorized user');
+    const unsubscribe = onSnapshot(doc(getFirestore(), getProfileLink(user.uid)), async (snapshot) => {
+        if (!snapshot.exists()) return;
+        unsubscribe();
 
-    const profile = await getDoc(doc(getFirestore(), getProfileLink(user.uid)));
-    const data = profile.data() as UserProfileRaw;
+        const data = snapshot.data() as UserProfileRaw;
 
-    const quizzesSet = new Set(data.quizzes);
-    if (quizzesSet.has(quizId)) return;
+        const quizzesSet = new Set(data.quizzes);
+        if (quizzesSet.has(quizId)) return;
 
-    quizzesSet.add(quizId);
-    await setDoc(doc(getFirestore(), getProfileLink(user.uid)), { quizzes: Array.from(quizzesSet) });
+        quizzesSet.add(quizId);
+        await setDoc(doc(getFirestore(), getProfileLink(user.uid)), { quizzes: Array.from(quizzesSet) });
+    });
 }

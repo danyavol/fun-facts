@@ -9,3 +9,5 @@ A fun quiz game to discover surprising facts about your friends!
 - Enjoy a fun evening guessing who each fact belongs to!
 
 [How To Use](https://youtu.be/SlXPj8m8Y3M?si=ycQXOgCuNlsZsyFB)
+
+[PLAY HERE](https://fun-facts.danyavol.dev)

@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import styles from './game-results.module.scss';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { NavLink } from 'react-router';
+import { useTranslate } from '../../../translate/use-translate.ts';
 
 type GameResultsProps = {
     game: Game;
@@ -18,6 +19,8 @@ type Leaderboard = {
 }[];
 
 export function GameResults({ game, players }: GameResultsProps) {
+    const { t } = useTranslate();
+
     const leaderboard: Leaderboard = useMemo(() => {
         const points: Record<string, number> = {};
         players.forEach((player) => {
@@ -60,7 +63,7 @@ export function GameResults({ game, players }: GameResultsProps) {
                     </NavLink>
                 </IconButton>
                 <Heading align="center" color="indigo" style={{ flexGrow: 1 }}>
-                    Результаты
+                    {t('game.results.title')}
                 </Heading>
             </Flex>
 
@@ -68,10 +71,10 @@ export function GameResults({ game, players }: GameResultsProps) {
                 <Table.Header>
                     <Table.Row>
                         <Table.ColumnHeaderCell width="0px" align="center">
-                            №
+                            {t('game.results.table.position')}
                         </Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>Имя</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell align="right">Очки</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>{t('game.results.table.name')}</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell align="right">{t('game.results.table.score')}</Table.ColumnHeaderCell>
                     </Table.Row>
                 </Table.Header>
 

@@ -5,6 +5,7 @@ import styles from './game-registration.module.scss';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useCurrentUser } from '../../../services/auth.service.ts';
 import { Me } from '../../../components/me/me.tsx';
+import { useTranslate } from '../../../translate/use-translate.ts';
 
 type GameRegistrationProps = {
     game: Game;
@@ -15,16 +16,19 @@ type GameRegistrationProps = {
 export function GameRegistration({ game, players, me }: GameRegistrationProps) {
     const { selectPlayer, deselectPlayer } = useGamePlayerSelection(game.id);
     const { isAdmin, user } = useCurrentUser();
+    const { t } = useTranslate();
 
     const canEdit = isAdmin || game.ownerId === user?.uid;
 
     return (
         <>
             <Heading size="5" align="center" mb="2">
-                {game.displayedFact ? 'Квиз уже начался!' : 'Квиз скоро начнется!'}
+                {game.displayedFact
+                    ? t('game.registration.title.quiz-started')
+                    : t('game.registration.title.quiz-registration')}
             </Heading>
             <Text as="p" align="center" mb="4">
-                Выбери своё имя из списка:
+                {t('game.registration.select-yourself')}
             </Text>
             <Flex direction="column" gap="3">
                 {game.answers.map((answer, index) => {
@@ -48,7 +52,7 @@ export function GameRegistration({ game, players, me }: GameRegistrationProps) {
                                     <Flex align="center">
                                         <CheckIcon color="green" height={22} width={22} />
                                         <Text color="green" weight="bold">
-                                            Готов
+                                            {t('game.registration.ready')}
                                         </Text>
                                     </Flex>
                                 )}
@@ -56,7 +60,7 @@ export function GameRegistration({ game, players, me }: GameRegistrationProps) {
                                     <Flex align="center">
                                         <Cross2Icon color="red" height={22} width={22} />
                                         <Text color="red" weight="bold">
-                                            Не готов
+                                            {t('game.registration.not-ready')}
                                         </Text>
                                     </Flex>
                                 )}
@@ -70,7 +74,7 @@ export function GameRegistration({ game, players, me }: GameRegistrationProps) {
                     <Separator size="4" mt="5" mb="3" />
                     <Flex justify="end">
                         <Button onClick={() => showNextFact(game, '0')} disabled={!!game.displayedFact}>
-                            Начать квиз
+                            {t('game.registration.start')}
                         </Button>
                     </Flex>
                 </>

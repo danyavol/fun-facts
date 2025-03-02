@@ -19,6 +19,7 @@ export const ru = {
     'general.cancel': 'Отмена',
     'general.save': 'Сохранить',
     'general.create': 'Создать',
+    'general.delete': 'Удалить',
     'quizzes-list.your-quizzes': 'Твои квизы',
     'quizzes-list.create-quiz': 'Создать квиз',
     'quizzes-list.create-quiz.disabled-tooltip': 'Гости не могут создавать новые квизы',
@@ -48,6 +49,15 @@ export const ru = {
         });
         return factsText + ' о себе.';
     },
+    'quiz.delete.title': 'Удалить квиз',
+    'quiz.delete.description': (name: string) => `Ты уверен, что хочешь удалить "${name}" квиз?`,
+    'quiz.status-change.title': 'Изменить этап',
+    'quiz.status-change.beginning': 'Изменение статуса на',
+    'quiz.status-change.to.preparation': 'откроет участникам возможность менять свои факты.',
+    'quiz.status-change.to.started': 'запретит участникам менять свои факты и начнет квиз.',
+    'quiz.status-change.to.ended': 'завершит квиз.',
+    'quiz.status-change.confirm.text': 'Ты уверен, что хочешь изменить этап квиза?',
+    'quiz.status-change.confirm.button': 'Изменить',
     'fact.placeholder': 'Напиши что-нибудь о себе',
     'fact.new': 'Добавить факт',
     'fact.validation': 'Факт должен быть больше 0 и меньше 250 символов',
@@ -75,6 +85,17 @@ export const ru = {
     'quiz-form.players.placeholder': 'Введи имя',
     'quiz-form.facts-limit.title': 'Лимит фактов для игрока',
     'quiz-form.facts-limit.min-value-notification': 'Нельзя уменьшать после создания квиза',
+    'game.me': 'Я',
+    'game.registration.title.quiz-started': 'Квиз уже начался!',
+    'game.registration.title.quiz-registration': 'Квиз скоро начнется!',
+    'game.registration.select-yourself': 'Выбери своё имя из списка:',
+    'game.registration.ready': 'Готов',
+    'game.registration.not-ready': 'Не готов',
+    'game.registration.start': 'Начать квиз',
+    'game.results.title': 'Результаты',
+    'game.results.table.position': '№',
+    'game.results.table.name': 'Имя',
+    'game.results.table.score': 'Очки',
 };
 
 export type Translation = typeof ru;

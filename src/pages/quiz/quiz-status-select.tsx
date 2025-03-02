@@ -52,34 +52,37 @@ export function QuizStatusSelect({ quiz, totalFacts }: { quiz: Quiz; totalFacts:
 
             <AlertDialog.Root open={open} onOpenChange={setOpen}>
                 <AlertDialog.Content maxWidth="500px">
-                    <AlertDialog.Title>Изменить этап</AlertDialog.Title>
+                    <AlertDialog.Title>{t('quiz.status-change.title')}</AlertDialog.Title>
                     <AlertDialog.Description size="2">
                         {pendingValue === 'open' && (
                             <>
-                                Изменение статуса на {getStatusName(t, pendingValue)} откроет участникам возможность
-                                менять свои факты.
+                                {t('quiz.status-change.beginning')} {getStatusName(t, pendingValue)}{' '}
+                                {t('quiz.status-change.to.preparation')}
                             </>
                         )}
                         {pendingValue === 'started' && (
                             <>
-                                Изменение статуса на {getStatusName(t, pendingValue)} запретит участникам менять свои
-                                факты и начнет квиз.
+                                {t('quiz.status-change.beginning')} {getStatusName(t, pendingValue)}{' '}
+                                {t('quiz.status-change.to.started')}
                             </>
                         )}
                         {pendingValue === 'ended' && (
-                            <>Изменение статуса на {getStatusName(t, pendingValue)} завершит квиз.</>
+                            <>
+                                {t('quiz.status-change.beginning')} {getStatusName(t, pendingValue)}{' '}
+                                {t('quiz.status-change.to.ended')}
+                            </>
                         )}
                         <Text mt="2" style={{ display: 'block' }}>
-                            Ты уверен, что хочешь изменить этап квиза?
+                            {t('quiz.status-change.confirm.text')}
                         </Text>
                     </AlertDialog.Description>
 
                     <Flex gap="3" mt="4" justify="end">
                         <Button variant="soft" color="gray" onClick={cancelChange}>
-                            Отмена
+                            {t('general.cancel')}
                         </Button>
                         <Button variant="solid" loading={isLoading} onClick={confirmChange}>
-                            Изменить
+                            {t('quiz.status-change.confirm.button')}
                         </Button>
                     </Flex>
                 </AlertDialog.Content>

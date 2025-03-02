@@ -1,15 +1,18 @@
-import { Button, Dialog, Tooltip } from '@radix-ui/themes';
+import { Button, Dialog } from '@radix-ui/themes';
 import { useCreateQuiz } from '../../services/quizzes.service.tsx';
 import { useState } from 'react';
 import { QuizForm } from '../quiz-form/quiz-form.tsx';
 import { getDefaultQuizValue, QuizFormData } from '../quiz-form/default-quiz-form-value.ts';
 import { useCurrentUser } from '../../services/auth.service.ts';
+import { Tooltip } from '../tooltip/tooltip.tsx';
 
 export function CreateQuizButton() {
     const [value, setValue] = useState<QuizFormData>(getDefaultQuizValue());
     const [open, setOpen] = useState(false);
     const { createQuiz, isLoading } = useCreateQuiz();
     const { user } = useCurrentUser();
+
+    const newQuizButtonDisabled = !user || user?.isAnonymous;
 
     async function createNewQuiz(form: QuizFormData) {
         await createQuiz(form);
@@ -19,10 +22,8 @@ export function CreateQuizButton() {
 
     return (
         <>
-            <Tooltip
-                content={!user || user?.isAnonymous ? 'Гости не могут создавать новые квизы' : 'Создать новый квиз'}
-            >
-                <Button disabled={!user || user?.isAnonymous} onClick={() => setOpen(true)}>
+            <Tooltip text={newQuizButtonDisabled ? 'Гости не могут создавать новые квизы' : ''}>
+                <Button disabled={newQuizButtonDisabled} onClick={() => !newQuizButtonDisabled && setOpen(true)}>
                     Создать квиз
                 </Button>
             </Tooltip>

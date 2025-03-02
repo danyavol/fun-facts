@@ -3,6 +3,7 @@ import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { getDefaultQuizValue, QuizFormData } from './default-quiz-form-value.ts';
 import styles from './quiz-form.module.scss';
+import { Tooltip } from '../tooltip/tooltip.tsx';
 
 type QuizFormProps = {
     type: 'new' | 'edit';
@@ -11,6 +12,8 @@ type QuizFormProps = {
     onConfirm: (form: QuizFormData) => unknown;
     isLoading?: boolean;
 };
+
+const maxPlayers = 16;
 
 export function QuizForm({
     type,
@@ -22,9 +25,12 @@ export function QuizForm({
     const [name, setName] = useState(value.name);
     const [answers, setAnswers] = useState<string[]>(value.answers);
     const [factsLimit, setFactsLimit] = useState(value.factsLimit);
+    const [answerFocus, setAnswerFocus] = useState<number | null>(null);
 
     // Do not allow to decrease number of facts for existing quizzes
     const minimumAllowedFacts = type === 'edit' ? (value.factsLimit ?? 1) : 1;
+
+    const reachedLimitOfPlayers = answers.length >= maxPlayers;
 
     useEffect(() => {
         setName(value.name ?? '');
@@ -55,6 +61,8 @@ export function QuizForm({
     }
 
     function addAnswer() {
+        if (reachedLimitOfPlayers) return;
+        setAnswerFocus(answers.length);
         setAnswers([...answers, '']);
     }
 
@@ -99,9 +107,11 @@ export function QuizForm({
                     </Text>
                 </Box>
 
-                <IconButton size="1" onClick={addAnswer}>
-                    <PlusIcon />
-                </IconButton>
+                <Tooltip text={reachedLimitOfPlayers ? `Максимум ${maxPlayers} игроков` : ''}>
+                    <IconButton size="1" onClick={addAnswer} disabled={reachedLimitOfPlayers}>
+                        <PlusIcon />
+                    </IconButton>
+                </Tooltip>
             </Flex>
 
             <Flex direction="column" gap="2" mb="4">
@@ -109,6 +119,7 @@ export function QuizForm({
                     <Flex align="center" gap="2" key={answerId}>
                         <Box flexGrow="1">
                             <TextField.Root
+                                autoFocus={answerId === answerFocus}
                                 value={answer}
                                 onChange={(e) => setAnswer(answerId, e.target.value)}
                                 placeholder={'Введи имя'}

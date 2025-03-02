@@ -26,7 +26,7 @@ export function GameRegistration({ game, players, me }: GameRegistrationProps) {
             <Text as="p" align="center" mb="4">
                 Выбери своё имя из списка:
             </Text>
-            <Flex direction="column" gap="5">
+            <Flex direction="column" gap="3">
                 {game.answers.map((answer, index) => {
                     const playerId = String(index);
                     const isTaken = players.some((player) => player.id === playerId && player.userId);

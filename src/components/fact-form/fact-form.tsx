@@ -3,6 +3,7 @@ import { FactFormData } from './default-fact-form-value.ts';
 import { useEffect, useState } from 'react';
 import { FactImage } from './fact-image.tsx';
 import styles from './fact-image.module.scss';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 type FactFormProps = {
     type: 'new' | 'edit';
@@ -27,6 +28,7 @@ export function FactForm({
 }: FactFormProps) {
     const [text, setText] = useState(value.text);
     const [dirty, setDirty] = useState(false);
+    const { t } = useTranslate();
 
     const trimmedText = text.trim();
 
@@ -58,14 +60,14 @@ export function FactForm({
                     setText(e.target.value);
                     setDirty(true);
                 }}
-                placeholder="Напиши что-нибудь о себе"
+                placeholder={t('fact.placeholder')}
                 readOnly={readonlyForm}
             />
-            {showTextError && <Text color="red">Факт должен быть больше 0 и меньше 250 символов</Text>}
+            {showTextError && <Text color="red">{t('fact.validation')}</Text>}
             <Flex justify="end" mt="2">
                 {(hasChanges || type === 'new') && (
                     <Button onClick={submit} loading={isLoading} disabled={isSubmitDisabled}>
-                        {type == 'new' ? 'Добавить факт' : 'Сохранить'}
+                        {type == 'new' ? t('fact.new') : t('general.save')}
                     </Button>
                 )}
             </Flex>

@@ -14,7 +14,6 @@ import {
     ExclamationTriangleIcon,
     InfoCircledIcon,
 } from '@radix-ui/react-icons';
-import { ruPluralText } from '../../utils/plural.ts';
 import { useCurrentUser } from '../../services/auth.service.ts';
 import { QuizStatusSelect } from './quiz-status-select.tsx';
 import { useTranslate } from '../../translate/use-translate.ts';
@@ -58,14 +57,10 @@ export function QuizPage() {
     }
 
     function addMoreFactsText(facts: number) {
-        const ending = ruPluralText(facts, {
-            one: 'интересный факт',
-            few: 'интересных факта',
-            many: 'интересных фактов',
-        });
         return (
             <>
-                Пожалуйста, добавь еще <strong>{facts}</strong> {ending} о себе.
+                {t('quiz.add-n-more-facts.beginning')} <strong>{facts}</strong>{' '}
+                {t('quiz.add-n-more-facts.ending', facts)}
             </>
         );
     }
@@ -104,7 +99,7 @@ export function QuizPage() {
                         {quiz && (
                             <Flex justify="between" align="center" gap="3">
                                 <Flex align="center" gap="2">
-                                    <Text>Этап:</Text>
+                                    <Text>{t('quiz.stage')}</Text>
                                     {canEdit ? (
                                         <QuizStatusSelect quiz={quiz} totalFacts={totalFacts} />
                                     ) : (
@@ -112,7 +107,7 @@ export function QuizPage() {
                                     )}
                                 </Flex>
                                 <Text align="right">
-                                    Всего фактов в квизе: <strong>{totalFacts}</strong>
+                                    {t('quiz.total-facts-number')} <strong>{totalFacts}</strong>
                                 </Text>
                             </Flex>
                         )}
@@ -123,9 +118,9 @@ export function QuizPage() {
                                     <CrossCircledIcon />
                                 </Callout.Icon>
                                 <Callout.Text>
-                                    Квиз уже окончен 🥺{' '}
+                                    {t('quiz.ended.notification')}{' '}
                                     <Link asChild color="red" weight="bold" underline="always">
-                                        <NavLink to={'play'}>Результаты</NavLink>
+                                        <NavLink to={'play'}>{t('quiz.ended.results')}</NavLink>
                                     </Link>
                                 </Callout.Text>
                             </Callout.Root>
@@ -136,11 +131,11 @@ export function QuizPage() {
                                     <CheckCircledIcon />
                                 </Callout.Icon>
                                 <Callout.Text>
-                                    Квиз уже начался! Переходи{' '}
+                                    {t('quiz.started.notification.beginning')}{' '}
                                     <Link asChild color="green" weight="bold" underline="always">
-                                        <NavLink to={'play'}>по ссылке</NavLink>
+                                        <NavLink to={'play'}>{t('quiz.started.notification.link')}</NavLink>
                                     </Link>{' '}
-                                    и участвуй!
+                                    {t('quiz.started.notification.ending')}
                                 </Callout.Text>
                             </Callout.Root>
                         )}
@@ -151,15 +146,10 @@ export function QuizPage() {
                                     <InfoCircledIcon />
                                 </Callout.Icon>
                                 <Callout.Text>
-                                    Придумай что-нибудь интересное или необычное о себе. Во время квиза участники будут
-                                    угадывать кому принадлежит факт. Поэтому не указывай своё имя и пол в фактах 😉.
-                                    Пример:
+                                    {t('quiz.preparation.explanation')}
                                     <Box as="span" mt="2">
                                         <strong>
-                                            <em>
-                                                Люблю лошадей. В детстве занимался(ась) конным спортом. Есть своя лошадь
-                                                по имени Бэмби
-                                            </em>
+                                            <em>{t('quiz.preparation.example')}</em>
                                         </strong>
                                     </Box>
                                 </Callout.Text>
@@ -185,7 +175,7 @@ export function QuizPage() {
                         )}
 
                         <Heading size="4" mt="3" mb="3">
-                            Твои факты:
+                            {t('quiz.your-facts')}
                         </Heading>
                         <Flex direction="column" gap="3">
                             {facts?.map((fact) => (
@@ -203,7 +193,7 @@ export function QuizPage() {
                             ))}
                             {!facts?.length && (
                                 <Text align="center" color="gray">
-                                    Ты не добавил еще ни одного факта
+                                    {t('quiz.preparation.no-facts-added-yet')}
                                 </Text>
                             )}
                         </Flex>

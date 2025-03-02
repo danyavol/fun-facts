@@ -4,7 +4,6 @@ import { Box, Container, Flex, Heading, Separator, Spinner, Text } from '@radix-
 import styles from './quizzes-list.module.scss';
 import { NavLink } from 'react-router';
 import { CreateQuizButton } from '../../components/create-quiz-dialog/create-quiz-dialog.tsx';
-import { ruPluralText } from '../../utils/plural.ts';
 import { Header } from '../../components/header/header.tsx';
 import { useTranslate } from '../../translate/use-translate.ts';
 
@@ -38,12 +37,7 @@ export function QuizzesListPage() {
                                         <Flex gap="3" align="center">
                                             {getStatusName(t, quiz.status)}
                                             <Separator orientation="vertical" />
-                                            {quiz.totalFacts ?? 0}{' '}
-                                            {ruPluralText(quiz.totalFacts ?? 0, {
-                                                one: 'факт',
-                                                few: 'факта',
-                                                many: 'фактов',
-                                            })}
+                                            {quiz.totalFacts ?? 0} {t('fact.number', quiz.totalFacts ?? 0)}
                                         </Flex>
                                     </Box>
                                 </NavLink>

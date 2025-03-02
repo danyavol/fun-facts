@@ -5,6 +5,7 @@ import styles from './fact-image.module.scss';
 import { ChangeEvent, useRef, useState } from 'react';
 import { useDeleteImage, useImageUpload } from '../../services/image.service.ts';
 import * as Toast from '@radix-ui/react-toast';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 const maxFileSize = 5 * 1024 * 1024;
 
@@ -21,6 +22,7 @@ export function FactImage({
     const { uploadImage, isLoading } = useImageUpload();
     const { deleteImage, isLoading: deleteImageLoading } = useDeleteImage();
     const [imageError, setImageError] = useState<string>('');
+    const { t } = useTranslate();
 
     async function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
         const image = event.target.files?.[0];
@@ -28,7 +30,7 @@ export function FactImage({
 
         if (image.size > maxFileSize) {
             event.target.value = '';
-            setImageError(`Максимальный размер картинки 5МБ`);
+            setImageError(t('fact.image.max-size'));
             return;
         }
 
@@ -50,7 +52,7 @@ export function FactImage({
                                 <>
                                     <ImageIcon width={30} height={30} color="teal" />
                                     <Text color="teal" size="2">
-                                        Добавить фото
+                                        {t('fact.image.add')}
                                     </Text>
                                 </>
                             )}
@@ -58,7 +60,7 @@ export function FactImage({
                                 <>
                                     <ImageIcon width={30} height={30} color="gray" />
                                     <Text color="gray" size="2">
-                                        Фото отсутствует
+                                        {t('fact.image.empty')}
                                     </Text>
                                 </>
                             )}
@@ -73,7 +75,7 @@ export function FactImage({
             )}
             {imageUrl && (
                 <AspectRatio ratio={16 / 8} className={styles.imageWrapper}>
-                    <img src={imageUrl} className={styles.image} alt="Фото к факту" />
+                    <img src={imageUrl} className={styles.image} alt="Fact photo" />
                     {!readOnly && factId && (
                         <IconButton
                             className={styles.deleteImageBtn}

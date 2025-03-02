@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getDefaultQuizValue, QuizFormData } from './default-quiz-form-value.ts';
 import styles from './quiz-form.module.scss';
 import { Tooltip } from '../tooltip/tooltip.tsx';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 type QuizFormProps = {
     type: 'new' | 'edit';
@@ -26,6 +27,7 @@ export function QuizForm({
     const [answers, setAnswers] = useState<string[]>(value.answers);
     const [factsLimit, setFactsLimit] = useState(value.factsLimit);
     const [answerFocus, setAnswerFocus] = useState<number | null>(null);
+    const { t } = useTranslate();
 
     // Do not allow to decrease number of facts for existing quizzes
     const minimumAllowedFacts = type === 'edit' ? (value.factsLimit ?? 1) : 1;
@@ -76,23 +78,23 @@ export function QuizForm({
         <Dialog.Content
             maxWidth="450px"
             onOpenAutoFocus={(e) => e.preventDefault()}
-            aria-describedby={'Заполни форму квиза'}
+            aria-describedby={'Fill in quiz form'}
         >
-            <Dialog.Title>{type == 'new' ? 'Создать новый квиз' : 'Изменить квиз'}</Dialog.Title>
+            <Dialog.Title>{type == 'new' ? t('quiz-form.new') : t('quiz-form.edit')}</Dialog.Title>
             {/* Needed to avoid warning */}
             <Dialog.Description style={{ display: 'none' }}></Dialog.Description>
 
             <Flex direction="column" gap="3" mb="4">
                 <label>
                     <Text as="div" size="2" weight="bold" mb="1">
-                        Название
+                        {t('quiz-form.quiz-title')}
                     </Text>
                     <TextField.Root
                         autoFocus
                         maxLength={60}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="Введи название квиза"
+                        placeholder={t('quiz-form.quiz-title.placeholder')}
                     />
                 </label>
             </Flex>
@@ -100,14 +102,14 @@ export function QuizForm({
             <Flex justify="between" mb="2" align="end">
                 <Box>
                     <Text as="div" size="2" weight="bold">
-                        Имена игроков
+                        {t('quiz-form.players.title')}
                     </Text>
                     <Text as="div" size="2" color="gray" trim="both">
-                        Используются в качестве ответов в квизе
+                        {t('quiz-form.players.description')}
                     </Text>
                 </Box>
 
-                <Tooltip text={reachedLimitOfPlayers ? `Максимум ${maxPlayers} игроков` : ''}>
+                <Tooltip text={reachedLimitOfPlayers ? t('quiz-form.players.max', maxPlayers) : ''}>
                     <IconButton size="1" onClick={addAnswer} disabled={reachedLimitOfPlayers}>
                         <PlusIcon />
                     </IconButton>
@@ -122,7 +124,7 @@ export function QuizForm({
                                 autoFocus={answerId === answerFocus}
                                 value={answer}
                                 onChange={(e) => setAnswer(answerId, e.target.value)}
-                                placeholder={'Введи имя'}
+                                placeholder={t('quiz-form.players.placeholder')}
                             />
                         </Box>
                         <IconButton size="1" variant="ghost" color="gray" mr="1" onClick={() => removeAnswer(answerId)}>
@@ -133,15 +135,13 @@ export function QuizForm({
             </Flex>
 
             <Flex direction="column">
-                <Box mb="1">
+                <Box mb="3">
                     <Text as="div" size="2" weight="bold">
-                        Лимит фактов для игрока
+                        {t('quiz-form.facts-limit.title')}
                     </Text>
-                    {type === 'edit' && (
-                        <Text as="div" size="2" color="gray" trim="both" mb="2">
-                            Нельзя уменьшать количество фактов
-                        </Text>
-                    )}
+                    <Text as="div" size="2" color="gray" trim="both">
+                        {t('quiz-form.facts-limit.min-value-notification')}
+                    </Text>
                 </Box>
                 <Slider
                     value={[factsLimit]}
@@ -174,10 +174,10 @@ export function QuizForm({
 
             <Flex gap="3" mt="4" justify="end">
                 <Button variant="soft" color="gray" onClick={onCancel}>
-                    Отмена
+                    {t('general.cancel')}
                 </Button>
                 <Button loading={isLoading} disabled={!name || !answersValid()} onClick={submit}>
-                    Сохранить
+                    {type == 'new' ? t('general.create') : t('general.save')}
                 </Button>
             </Flex>
         </Dialog.Content>

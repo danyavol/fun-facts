@@ -1,4 +1,5 @@
 import { Translation } from './ru.ts';
+import { enPluralText } from '../../utils/plural.ts';
 
 export const en: Translation = {
     'auth.email': 'Email',
@@ -16,6 +17,9 @@ export const en: Translation = {
     'auth.error.invalid-credentials': 'Invalid email or password',
     'auth.error.weak-password': 'Password is too weak',
     'auth.error.unknown-error': 'Unknown error occurred',
+    'general.cancel': 'Cancel',
+    'general.save': 'Save',
+    'general.create': 'Create',
     'quizzes-list.your-quizzes': 'Your quizzes',
     'quizzes-list.create-quiz': 'Create quiz',
     'quizzes-list.create-quiz.disabled-tooltip': 'Guests are not allowed to create quizzes',
@@ -23,4 +27,49 @@ export const en: Translation = {
     'quiz.status.preparation': 'Preparation',
     'quiz.status.started': 'Quiz started!',
     'quiz.status.ended': 'Quiz ended',
+    'quiz.your-facts': 'Your facts:',
+    'quiz.stage': 'Stage:',
+    'quiz.total-facts-number': 'Total facts:',
+    'quiz.ended.notification': 'The quiz has already ended 🥺',
+    'quiz.ended.results': 'Results',
+    'quiz.started.notification.beginning': 'The quiz has already started! Join',
+    'quiz.started.notification.link': 'via the link',
+    'quiz.started.notification.ending': 'and play!',
+    'quiz.preparation.explanation':
+        'Think of something interesting or unusual about yourself. During the quiz, players will guess who the fact belongs to. So, don’t include your name or gender in the facts 😉. Example:',
+    'quiz.preparation.example': 'I love horses. As a child, I did horse racing. I have my own horse named Bambi.',
+    'quiz.preparation.no-facts-added-yet': 'You haven’t added any facts yet',
+    'quiz.add-n-more-facts.beginning': 'Please add',
+    'quiz.add-n-more-facts.ending': (facts: number) => {
+        const factsText = enPluralText(facts, {
+            one: 'more interesting fact',
+            other: 'more interesting facts',
+        });
+        return factsText + ' about yourself.';
+    },
+    'fact.placeholder': 'Write something about yourself',
+    'fact.new': 'Add fact',
+    'fact.validation': 'The fact must be between 1 and 250 characters long',
+    'fact.image.add': 'Add photo',
+    'fact.image.empty': 'No photo attached',
+    'fact.image.max-size': 'Maximum image size is 5MB',
+    'fact.number': (facts: number) =>
+        enPluralText(facts, {
+            one: 'fact',
+            other: 'facts',
+        }),
+    'quiz-form.new': 'Create a new quiz',
+    'quiz-form.edit': 'Edit quiz',
+    'quiz-form.quiz-title': 'Quiz title',
+    'quiz-form.quiz-title.placeholder': 'Enter the quiz title',
+    'quiz-form.players.title': 'Player names',
+    'quiz-form.players.description': 'Used as answer choices in the quiz',
+    'quiz-form.players.max': (players: number) =>
+        enPluralText(players, {
+            one: `Maximum of ${players} player`,
+            other: `Maximum of ${players} players`,
+        }),
+    'quiz-form.players.placeholder': 'Enter a name',
+    'quiz-form.facts-limit.title': 'Facts limit per player',
+    'quiz-form.facts-limit.min-value-notification': 'Cannot be decreased after the quiz is created',
 };

@@ -1,8 +1,21 @@
 import { Translation } from './ru.ts';
 
 export const en: Translation = {
+    'auth.email': 'Email',
+    'auth.password': 'Password',
+    'auth.password.confirm': 'Confirm password',
+    'auth.create-account': 'Create account',
+    'auth.already-have-account': 'Already have account?',
+    'auth.log-in': 'Sign in',
     'auth.guest': 'Guest',
-    'auth.log-out': 'Log out',
+    'auth.log-out': 'Sign out',
+    'auth.or': 'OR',
+    'auth.via-google': 'Sign in with Google',
+    'auth.as-guest': 'Sign in as a Guest',
+    'auth.error.invalid-email': 'Invalid email address',
+    'auth.error.invalid-credentials': 'Invalid email or password',
+    'auth.error.weak-password': 'Password is too weak',
+    'auth.error.unknown-error': 'Unknown error occurred',
     'quizzes-list.your-quizzes': 'Your quizzes',
     'quizzes-list.create-quiz': 'Create quiz',
     'quizzes-list.create-quiz.disabled-tooltip': 'Guests are not allowed to create quizzes',

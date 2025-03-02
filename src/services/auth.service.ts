@@ -9,6 +9,7 @@ import {
     signInWithPopup,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { TranslateFn, useTranslate } from '../translate/use-translate.ts';
 
 export function getCurrentUser(): Promise<User | null> {
     return new Promise((resolve) => {
@@ -48,6 +49,7 @@ export function useCurrentUser() {
 export function useSignInViaGoogle() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const { t } = useTranslate();
 
     async function signInViaGoogle() {
         setIsLoading(true);
@@ -55,7 +57,7 @@ export function useSignInViaGoogle() {
         try {
             await signInWithPopup(getAuth(), new GoogleAuthProvider());
         } catch (e) {
-            setError(getErrorMessage(e));
+            setError(getErrorMessage(t, e));
         } finally {
             setIsLoading(false);
         }
@@ -67,6 +69,7 @@ export function useSignInViaGoogle() {
 export function useSignInAnonymously() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const { t } = useTranslate();
 
     async function signInAnonymous() {
         setIsLoading(true);
@@ -74,7 +77,7 @@ export function useSignInAnonymously() {
         try {
             await signInAnonymously(getAuth());
         } catch (e) {
-            setError(getErrorMessage(e));
+            setError(getErrorMessage(t, e));
         } finally {
             setIsLoading(false);
         }
@@ -86,6 +89,7 @@ export function useSignInAnonymously() {
 export function useSignInWithPassword() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const { t } = useTranslate();
 
     async function signInWithPassword(email: string, password: string) {
         setIsLoading(true);
@@ -93,7 +97,7 @@ export function useSignInWithPassword() {
         try {
             await signInWithEmailAndPassword(getAuth(), email, password);
         } catch (e) {
-            setError(getErrorMessage(e));
+            setError(getErrorMessage(t, e));
         } finally {
             setIsLoading(false);
         }
@@ -105,6 +109,7 @@ export function useSignInWithPassword() {
 export function useCreateNewPasswordAccount() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const { t } = useTranslate();
 
     async function createNewPasswordAccount(email: string, password: string) {
         setIsLoading(true);
@@ -112,7 +117,7 @@ export function useCreateNewPasswordAccount() {
         try {
             await createUserWithEmailAndPassword(getAuth(), email, password);
         } catch (e) {
-            setError(getErrorMessage(e));
+            setError(getErrorMessage(t, e));
         } finally {
             setIsLoading(false);
         }
@@ -133,19 +138,19 @@ export function useSignOut() {
     return { signOut, isLoading };
 }
 
-function getErrorMessage(error: unknown) {
+function getErrorMessage(t: TranslateFn, error: unknown) {
     if (error && typeof error === 'object' && 'code' in error && typeof error.code === 'string') {
         switch (error.code) {
             case 'auth/invalid-email':
-                return 'Неверный адрес эл. почты';
+                return t('auth.error.invalid-email');
             case 'auth/invalid-credential':
-                return 'Неверная эл. почта или пароль';
+                return t('auth.error.invalid-credentials');
             case 'auth/weak-password':
-                return 'Слишком слабый пароль';
+                return t('auth.error.weak-password');
             default:
                 return error.code;
         }
     } else {
-        return 'Произошла неизвестная ошибка';
+        return t('auth.error.unknown-error');
     }
 }

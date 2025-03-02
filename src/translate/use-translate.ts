@@ -10,9 +10,9 @@ const translations = {
 
 export type LanguageKey = keyof typeof translations;
 
-export const languages: { key: LanguageKey; name: string }[] = [
-    { key: 'ru', name: 'Русский' },
-    { key: 'en', name: 'English' },
+export const languages: { key: LanguageKey; name: string; label: string }[] = [
+    { key: 'ru', name: 'Русский', label: 'RU' },
+    { key: 'en', name: 'English', label: 'EN' },
 ];
 
 export function useTranslate() {

@@ -7,6 +7,8 @@ import { Logo } from '../../components/logo/logo.tsx';
 import { EnterIcon } from '@radix-ui/react-icons';
 import { SensitiveInput } from '../../components/sensitive-input/sensitive-input.tsx';
 import { NavLink } from 'react-router';
+import { LanguageSwitcher } from '../../components/language-switcher/language-switcher.tsx';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 export function SignInPage() {
     const { signInAnonymous, isLoading: guestIsLoading, error: guestError } = useSignInAnonymously();
@@ -15,6 +17,7 @@ export function SignInPage() {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [loginClicked, setLoginClicked] = useState(false);
+    const { t } = useTranslate();
 
     const isValid = useMemo(() => {
         return !!email && !!password;
@@ -33,6 +36,10 @@ export function SignInPage() {
                 <Flex justify="center" mb="3">
                     <Logo />
                 </Flex>
+                <Flex justify="end">
+                    <LanguageSwitcher compact={true} />
+                </Flex>
+
                 {/* TODO: Move to separate component. Display google and guest buttons on create page, too */}
                 <Flex direction="column" gap="3" mb="2">
                     <Flex direction="column">
@@ -44,7 +51,7 @@ export function SignInPage() {
                                 weight="bold"
                                 color={loginClicked && !email ? 'red' : undefined}
                             >
-                                Эл. почта
+                                {t('auth.email')}
                             </Text>
                             <TextField.Root
                                 variant={loginClicked && !email ? 'soft' : 'surface'}
@@ -66,7 +73,7 @@ export function SignInPage() {
                                 weight="bold"
                                 color={loginClicked && !password ? 'red' : undefined}
                             >
-                                Пароль
+                                {t('auth.password')}
                             </Text>
                             <SensitiveInput
                                 variant={loginClicked && !password ? 'soft' : 'surface'}
@@ -81,7 +88,7 @@ export function SignInPage() {
                 </Flex>
                 <Flex justify="between" align="center">
                     <Link asChild>
-                        <NavLink to="/create-account">Создать аккаунт</NavLink>
+                        <NavLink to="/create-account">{t('auth.create-account')}</NavLink>
                     </Link>
 
                     <Button
@@ -93,7 +100,7 @@ export function SignInPage() {
                         size="3"
                     >
                         {passwordIsLoading ? <Spinner /> : <EnterIcon />}
-                        Войти
+                        {t('auth.log-in')}
                     </Button>
                 </Flex>
 
@@ -102,7 +109,7 @@ export function SignInPage() {
                         <Separator size="4" />
                     </Box>
                     <Text mx="3" color="gray" size="1">
-                        ИЛИ
+                        {t('auth.or')}
                     </Text>
                     <Box flexGrow="1">
                         <Separator size="4" />
@@ -111,11 +118,11 @@ export function SignInPage() {
 
                 <Button onClick={signInViaGoogle} variant="outline" color="gray" disabled={isDisabled} size="3">
                     {googleIsLoading ? <Spinner /> : <Google />}
-                    Войти через Google
+                    {t('auth.via-google')}
                 </Button>
                 <Button onClick={signInAnonymous} disabled={isDisabled} variant="outline" size="3" color="gray">
                     {guestIsLoading ? <Spinner /> : <Incognito />}
-                    Войти как Гость
+                    {t('auth.as-guest')}
                 </Button>
             </Flex>
         </Container>

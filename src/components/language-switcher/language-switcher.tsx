@@ -3,10 +3,10 @@ import Language from '../../icons/langauge.svg?react';
 import { LanguageKey, languages } from '../../translate/use-translate.ts';
 import { useLanguageStore } from '../../translate/language.store.ts';
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
     const { language, setLanguage } = useLanguageStore();
 
-    const selectedLanguage = languages.find((l) => l.key === language)!.name;
+    const selectedLanguage = languages.find((l) => l.key === language)!;
 
     return (
         <Flex align="stretch" direction="column">
@@ -19,7 +19,7 @@ export function LanguageSwitcher() {
                 <Select.Trigger variant="ghost">
                     <Flex gap="2">
                         <Language />
-                        {selectedLanguage}
+                        {compact ? selectedLanguage.label : selectedLanguage.name}
                     </Flex>
                 </Select.Trigger>
                 <Select.Content>

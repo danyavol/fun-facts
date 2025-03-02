@@ -4,6 +4,8 @@ import { SensitiveInput } from '../../components/sensitive-input/sensitive-input
 import { Logo } from '../../components/logo/logo.tsx';
 import { NavLink } from 'react-router';
 import { useCreateNewPasswordAccount } from '../../services/auth.service.ts';
+import { LanguageSwitcher } from '../../components/language-switcher/language-switcher.tsx';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 export function CreateAccountPage() {
     const { createNewPasswordAccount, isLoading, error } = useCreateNewPasswordAccount();
@@ -11,6 +13,7 @@ export function CreateAccountPage() {
     const [repeatPassword, setRepeatPassword] = useState('');
     const [email, setEmail] = useState('');
     const [createClicked, setCreateClicked] = useState(false);
+    const { t } = useTranslate();
 
     const isValid = useMemo(() => {
         return password === repeatPassword && !!password && !!email;
@@ -22,6 +25,10 @@ export function CreateAccountPage() {
                 <Flex justify="center" mb="3">
                     <Logo />
                 </Flex>
+                <Flex justify="end">
+                    <LanguageSwitcher compact={true} />
+                </Flex>
+
                 <Flex direction="column" gap="3" mb="2">
                     <Flex direction="column">
                         <label>
@@ -32,7 +39,7 @@ export function CreateAccountPage() {
                                 weight="bold"
                                 color={createClicked && !email ? 'red' : undefined}
                             >
-                                Эл. почта
+                                {t('auth.email')}
                             </Text>
                             <TextField.Root
                                 variant={createClicked && !email ? 'soft' : 'surface'}
@@ -54,7 +61,7 @@ export function CreateAccountPage() {
                                 weight="bold"
                                 color={createClicked && !password ? 'red' : undefined}
                             >
-                                Пароль
+                                {t('auth.password')}
                             </Text>
                             <SensitiveInput
                                 variant={createClicked && !password ? 'soft' : 'surface'}
@@ -74,7 +81,7 @@ export function CreateAccountPage() {
                                 weight="bold"
                                 color={createClicked && password != repeatPassword ? 'red' : undefined}
                             >
-                                Подтвердить пароль
+                                {t('auth.password.confirm')}
                             </Text>
                             <SensitiveInput
                                 variant={createClicked && password != repeatPassword ? 'soft' : 'surface'}
@@ -96,12 +103,12 @@ export function CreateAccountPage() {
                     size="3"
                 >
                     {isLoading ? <Spinner /> : null}
-                    Создать аккаунт
+                    {t('auth.create-account')}
                 </Button>
                 <Flex gap="2">
-                    <Text as="span">Есть аккаунт?</Text>
+                    <Text as="span">{t('auth.already-have-account')}</Text>
                     <Link asChild>
-                        <NavLink to="/login">Войти</NavLink>
+                        <NavLink to="/login">{t('auth.log-in')}</NavLink>
                     </Link>
                 </Flex>
             </Flex>

@@ -16,6 +16,7 @@ import { Badge } from '@radix-ui/themes';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './auth.service.ts';
 import { joinQuiz, useCurrentUserProfile } from './user-profile.service.ts';
+import { TranslateFn } from '../translate/use-translate.ts';
 
 export type Quiz = {
     id: string;
@@ -29,25 +30,25 @@ export type Quiz = {
     status: 'open' | 'started' | 'ended';
 };
 
-export function getStatusName(status: Quiz['status'], disabled = false) {
+export function getStatusName(translateFn: TranslateFn, status: Quiz['status'], disabled = false) {
     const variant = disabled ? 'soft' : 'solid';
     switch (status) {
         case 'open':
             return (
                 <Badge color={disabled ? 'gray' : 'amber'} size="2" variant={variant}>
-                    Подготовка
+                    {translateFn('quiz.status.preparation')}
                 </Badge>
             );
         case 'started':
             return (
                 <Badge color={disabled ? 'gray' : 'green'} size="2" variant={variant}>
-                    Квиз начался!
+                    {translateFn('quiz.status.started')}
                 </Badge>
             );
         case 'ended':
             return (
                 <Badge color={disabled ? 'gray' : 'red'} size="2" variant={variant}>
-                    Квиз окончен
+                    {translateFn('quiz.status.ended')}
                 </Badge>
             );
         default:

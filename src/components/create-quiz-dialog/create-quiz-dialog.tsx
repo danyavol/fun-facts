@@ -5,12 +5,14 @@ import { QuizForm } from '../quiz-form/quiz-form.tsx';
 import { getDefaultQuizValue, QuizFormData } from '../quiz-form/default-quiz-form-value.ts';
 import { useCurrentUser } from '../../services/auth.service.ts';
 import { Tooltip } from '../tooltip/tooltip.tsx';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 export function CreateQuizButton() {
     const [value, setValue] = useState<QuizFormData>(getDefaultQuizValue());
     const [open, setOpen] = useState(false);
     const { createQuiz, isLoading } = useCreateQuiz();
     const { user } = useCurrentUser();
+    const { t } = useTranslate();
 
     const newQuizButtonDisabled = !user || user?.isAnonymous;
 
@@ -22,9 +24,9 @@ export function CreateQuizButton() {
 
     return (
         <>
-            <Tooltip text={newQuizButtonDisabled ? 'Гости не могут создавать новые квизы' : ''}>
+            <Tooltip text={newQuizButtonDisabled ? t('quizzes-list.create-quiz.disabled-tooltip') : ''}>
                 <Button disabled={newQuizButtonDisabled} onClick={() => !newQuizButtonDisabled && setOpen(true)}>
-                    Создать квиз
+                    {t('quizzes-list.create-quiz')}
                 </Button>
             </Tooltip>
             <Dialog.Root open={open} onOpenChange={setOpen}>

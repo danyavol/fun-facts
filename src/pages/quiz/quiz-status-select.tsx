@@ -3,11 +3,13 @@ import { getStatusName, Quiz, useEditQuiz } from '../../services/quizzes.service
 import { useState } from 'react';
 import { LockClosedIcon } from '@radix-ui/react-icons';
 import styles from './quiz-status-select.module.scss';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 export function QuizStatusSelect({ quiz, totalFacts }: { quiz: Quiz; totalFacts: number }) {
     const { editQuiz, isLoading } = useEditQuiz();
     const [pendingValue, setPendingValue] = useState<Quiz['status']>(quiz.status);
     const [open, setOpen] = useState(false);
+    const { t } = useTranslate();
 
     function changeValue(status: Quiz['status']) {
         setPendingValue(status);
@@ -35,15 +37,15 @@ export function QuizStatusSelect({ quiz, totalFacts }: { quiz: Quiz; totalFacts:
                 <Select.Content variant="soft">
                     <Select.Item value="open" disabled={!openEnabled}>
                         {!openEnabled && <LockClosedIcon className={styles.statusLock} />}
-                        {getStatusName('open', !openEnabled)}
+                        {getStatusName(t, 'open', !openEnabled)}
                     </Select.Item>
                     <Select.Item value="started" disabled={!startedEnabled}>
                         {!startedEnabled && <LockClosedIcon className={styles.statusLock} />}
-                        {getStatusName('started', !startedEnabled)}
+                        {getStatusName(t, 'started', !startedEnabled)}
                     </Select.Item>
                     <Select.Item value="ended" disabled={!endedEnabled}>
                         {!endedEnabled && <LockClosedIcon className={styles.statusLock} />}
-                        {getStatusName('ended', !endedEnabled)}
+                        {getStatusName(t, 'ended', !endedEnabled)}
                     </Select.Item>
                 </Select.Content>
             </Select.Root>
@@ -54,18 +56,18 @@ export function QuizStatusSelect({ quiz, totalFacts }: { quiz: Quiz; totalFacts:
                     <AlertDialog.Description size="2">
                         {pendingValue === 'open' && (
                             <>
-                                Изменение статуса на {getStatusName(pendingValue)} откроет участникам возможность менять
-                                свои факты.
+                                Изменение статуса на {getStatusName(t, pendingValue)} откроет участникам возможность
+                                менять свои факты.
                             </>
                         )}
                         {pendingValue === 'started' && (
                             <>
-                                Изменение статуса на {getStatusName(pendingValue)} запретит участникам менять свои факты
-                                и начнет квиз.
+                                Изменение статуса на {getStatusName(t, pendingValue)} запретит участникам менять свои
+                                факты и начнет квиз.
                             </>
                         )}
                         {pendingValue === 'ended' && (
-                            <>Изменение статуса на {getStatusName(pendingValue)} завершит квиз.</>
+                            <>Изменение статуса на {getStatusName(t, pendingValue)} завершит квиз.</>
                         )}
                         <Text mt="2" style={{ display: 'block' }}>
                             Ты уверен, что хочешь изменить этап квиза?

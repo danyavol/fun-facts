@@ -17,6 +17,7 @@ import {
 import { ruPluralText } from '../../utils/plural.ts';
 import { useCurrentUser } from '../../services/auth.service.ts';
 import { QuizStatusSelect } from './quiz-status-select.tsx';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 export function QuizPage() {
     const params = useParams();
@@ -29,6 +30,7 @@ export function QuizPage() {
     const [newFact, setNewFact] = useState<FactFormData>(getDefaultFactValue());
     const { isAdmin, user } = useCurrentUser();
     const navigate = useNavigate();
+    const { t } = useTranslate();
 
     useEffect(() => {
         if (!isEditFactLoading) {
@@ -106,7 +108,7 @@ export function QuizPage() {
                                     {canEdit ? (
                                         <QuizStatusSelect quiz={quiz} totalFacts={totalFacts} />
                                     ) : (
-                                        <strong>{getStatusName(quiz.status)}</strong>
+                                        <strong>{getStatusName(t, quiz.status)}</strong>
                                     )}
                                 </Flex>
                                 <Text align="right">

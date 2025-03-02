@@ -6,9 +6,11 @@ import { NavLink } from 'react-router';
 import { CreateQuizButton } from '../../components/create-quiz-dialog/create-quiz-dialog.tsx';
 import { ruPluralText } from '../../utils/plural.ts';
 import { Header } from '../../components/header/header.tsx';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 export function QuizzesListPage() {
     const { quizzes, isLoading } = useQuizzesList();
+    const { t } = useTranslate();
 
     return (
         <>
@@ -16,7 +18,7 @@ export function QuizzesListPage() {
             <Container size="2" p="4">
                 <Box className="main-container" p="5">
                     <Flex justify="between" align="center" mb="3">
-                        <Heading size="4">Твои квизы</Heading>
+                        <Heading size="4">{t('quizzes-list.your-quizzes')}</Heading>
                         <CreateQuizButton />
                     </Flex>
 
@@ -34,7 +36,7 @@ export function QuizzesListPage() {
                                             {quiz.name}
                                         </Text>
                                         <Flex gap="3" align="center">
-                                            {getStatusName(quiz.status)}
+                                            {getStatusName(t, quiz.status)}
                                             <Separator orientation="vertical" />
                                             {quiz.totalFacts ?? 0}{' '}
                                             {ruPluralText(quiz.totalFacts ?? 0, {
@@ -48,12 +50,7 @@ export function QuizzesListPage() {
                             ))}
                         {!isLoading && quizzes.length == 0 && (
                             <Text align="center" color="gray">
-                                Ты не участвуешь ни в одном квизе.
-                                <br />
-                                <br />
-                                Создай новый или
-                                <br />
-                                попроси друга поделиться ссылкой
+                                {t('quizzes-list.empty-state')}
                             </Text>
                         )}
                     </Flex>

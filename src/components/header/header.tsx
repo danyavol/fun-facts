@@ -5,11 +5,14 @@ import { ExitIcon, PersonIcon } from '@radix-ui/react-icons';
 import { useCurrentUser, useSignOut } from '../../services/auth.service.ts';
 import { useState } from 'react';
 import { Logo } from '../logo/logo.tsx';
+import { LanguageSwitcher } from '../language-switcher/language-switcher.tsx';
+import { useTranslate } from '../../translate/use-translate.ts';
 
 export const Header = () => {
     const { user, isAdmin } = useCurrentUser();
     const { signOut, isLoading } = useSignOut();
     const [isOpen, setIsOpen] = useState(false);
+    const { t } = useTranslate();
 
     function closeDropdown() {
         setIsOpen(false);
@@ -31,7 +34,7 @@ export const Header = () => {
                             {user?.isAnonymous && (
                                 <Flex gap="3" align="center">
                                     <Avatar fallback={<Incognito width="20px" height="20px" />} color="gray" />
-                                    <Text weight="bold">Гость</Text>
+                                    <Text weight="bold">{t('auth.guest')}</Text>
                                 </Flex>
                             )}
                             {user?.providerData.map((data) => (
@@ -53,9 +56,14 @@ export const Header = () => {
                             ))}
                         </Box>
                         <DropdownMenu.Separator />
+
+                        <Flex p="2" align="stretch" direction="column">
+                            <LanguageSwitcher />
+                        </Flex>
+
                         <DropdownMenu.Item color="red" onSelect={signOut} disabled={isLoading}>
                             {isLoading ? <Spinner /> : <ExitIcon />}
-                            Выйти
+                            {t('auth.log-out')}
                         </DropdownMenu.Item>
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>

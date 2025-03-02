@@ -5,7 +5,7 @@ import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyAfh_tIRBkfM3z6XNY79OntXGhETLa5xSI',
-    authDomain: 'fun-facts-2fa6e.firebaseapp.com',
+    authDomain: 'auth.fun-facts.danyavol.dev',
     databaseURL: 'https://fun-facts-2fa6e-default-rtdb.europe-west1.firebasedatabase.app',
     projectId: 'fun-facts-2fa6e',
     storageBucket: 'fun-facts-2fa6e.firebasestorage.app',

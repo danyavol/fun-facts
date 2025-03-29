@@ -1,7 +1,7 @@
 import { ruPluralText } from '../../utils/plural.ts';
 
 export const ru = {
-    'auth.email': 'Эл. почта',
+    'auth.email': 'Эл почта',
     'auth.password': 'Пароль',
     'auth.password.confirm': 'Подтвердить пароль',
     'auth.create-account': 'Создать аккаунт',

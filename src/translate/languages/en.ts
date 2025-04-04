@@ -38,7 +38,7 @@ export const en: Translation = {
     'quiz.started.notification.ending': 'and play!',
     'quiz.preparation.explanation':
         'Think of something interesting or unusual about yourself. During the quiz, players will guess who the fact belongs to. So, don’t include your name or gender in the facts 😉. Example:',
-    'quiz.preparation.example': 'I love horses. As a child, I did horse racing. I have my own horse named Bambi.',
+    'quiz.preparation.example': 'I collect postage stamps from all over the world',
     'quiz.preparation.no-facts-added-yet': 'You haven’t added any facts yet',
     'quiz.add-n-more-facts.beginning': 'Please add',
     'quiz.add-n-more-facts.ending': (facts: number) => {

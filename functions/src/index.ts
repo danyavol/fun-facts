@@ -13,7 +13,7 @@ import { onDocumentWritten, onDocumentDeleted, onDocumentCreated } from 'firebas
 import { getStorage } from 'firebase-admin/storage';
 import { beforeUserCreated } from 'firebase-functions/v2/identity';
 import { user } from 'firebase-functions/v1/auth';
-import { onCall } from 'firebase-functions/lib/v2/providers/https';
+import { onCall } from 'firebase-functions/v2/https';
 
 initializeApp();
 

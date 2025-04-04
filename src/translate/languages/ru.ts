@@ -85,6 +85,8 @@ export const ru = {
     'quiz-form.players.placeholder': 'Введи имя',
     'quiz-form.facts-limit.title': 'Лимит фактов для игрока',
     'quiz-form.facts-limit.min-value-notification': 'Нельзя уменьшать после создания квиза',
+    'quiz-form.estimated-game-time.title': 'Длительность игры около',
+    'quiz-form.estimated-game-time.minutes': `минут`,
     'game.me': 'Я',
     'game.registration.title.quiz-started': 'Квиз уже начался!',
     'game.registration.title.quiz-registration': 'Квиз скоро начнется!',

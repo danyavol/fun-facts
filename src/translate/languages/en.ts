@@ -82,6 +82,8 @@ export const en: Translation = {
     'quiz-form.players.placeholder': 'Enter a name',
     'quiz-form.facts-limit.title': 'Facts limit per player',
     'quiz-form.facts-limit.min-value-notification': 'Cannot be decreased after the quiz is created',
+    'quiz-form.estimated-game-time.title': 'Duration of the game is about',
+    'quiz-form.estimated-game-time.minutes': `minutes`,
     'game.me': 'Me',
     'game.registration.title.quiz-started': 'The quiz has already started!',
     'game.registration.title.quiz-registration': 'The quiz will start soon!',

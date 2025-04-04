@@ -1,10 +1,11 @@
-import { Box, Button, Dialog, Flex, IconButton, Slider, Text, TextField } from '@radix-ui/themes';
-import { Cross2Icon, PlusIcon } from '@radix-ui/react-icons';
+import { Box, Button, Callout, Dialog, Flex, IconButton, Slider, Text, TextField } from '@radix-ui/themes';
+import { Cross2Icon, InfoCircledIcon, PlusIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { getDefaultQuizValue, QuizFormData } from './default-quiz-form-value.ts';
 import styles from './quiz-form.module.scss';
 import { Tooltip } from '../tooltip/tooltip.tsx';
 import { useTranslate } from '../../translate/use-translate.ts';
+import { getEstimatedGameTime } from '../../utils/estimated-game-time.ts';
 
 type QuizFormProps = {
     type: 'new' | 'edit';
@@ -134,7 +135,7 @@ export function QuizForm({
                 ))}
             </Flex>
 
-            <Flex direction="column">
+            <Flex direction="column" mb="4">
                 <Box mb="3">
                     <Text as="div" size="2" weight="bold">
                         {t('quiz-form.facts-limit.title')}
@@ -171,6 +172,16 @@ export function QuizForm({
                     })}
                 </Flex>
             </Flex>
+
+            <Callout.Root>
+                <Callout.Icon>
+                    <InfoCircledIcon />
+                </Callout.Icon>
+                <Callout.Text>
+                    {t('quiz-form.estimated-game-time.title')}
+                    <Text weight="bold">{` ${getEstimatedGameTime(answers.length, factsLimit)} ${t('quiz-form.estimated-game-time.minutes')}`}</Text>
+                </Callout.Text>
+            </Callout.Root>
 
             <Flex gap="3" mt="4" justify="end">
                 <Button variant="soft" color="gray" onClick={onCancel}>

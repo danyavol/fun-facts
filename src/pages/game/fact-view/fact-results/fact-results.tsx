@@ -13,6 +13,7 @@ import { CheckIcon, Cross2Icon, QuestionMarkIcon } from '@radix-ui/react-icons';
 import { Me } from '../../../../components/me/me.tsx';
 import { PersonIcon } from '../../../../icons/person.tsx';
 import { useCurrentUser } from '../../../../services/auth.service.ts';
+import { useTranslate } from '../../../../translate/use-translate.ts';
 
 type FactResultsType = {
     players: Player[];
@@ -23,6 +24,7 @@ type FactResultsType = {
 
 export function FactResults({ players, me, game, fact }: FactResultsType) {
     const { isAdmin, user } = useCurrentUser();
+    const { t } = useTranslate();
 
     const canEdit = isAdmin || game.ownerId === user?.uid;
 
@@ -99,7 +101,7 @@ export function FactResults({ players, me, game, fact }: FactResultsType) {
                 <>
                     <Separator size="4" my="4" />
                     <Text as="p" size="2" mb="2" weight="bold">
-                        Выбери правильный ответ
+                        {t('game.fact-results.title')}
                     </Text>
                     <Flex justify="between">
                         <Select.Root
@@ -115,26 +117,26 @@ export function FactResults({ players, me, game, fact }: FactResultsType) {
                                 ))}
                                 <Select.Separator />
                                 <Select.Item value={unknownAnswerId}>
-                                    <Text color={'red'}>Неизвестно</Text>
+                                    <Text color={'red'}>{t('game.fact-results.unknown-answer')}</Text>
                                 </Select.Item>
                             </Select.Content>
                         </Select.Root>
                         {!isLastFact && (
                             <AlertDialog.Root>
                                 <AlertDialog.Trigger>
-                                    <Button>Далее</Button>
+                                    <Button>{t('general.next')}</Button>
                                 </AlertDialog.Trigger>
                                 <AlertDialog.Content maxWidth="450px">
-                                    <AlertDialog.Title>Ты уверен?</AlertDialog.Title>
+                                    <AlertDialog.Title>{t('game.fact-results.next.confirm')}</AlertDialog.Title>
                                     <Flex gap="3" mt="4" justify="end">
                                         <AlertDialog.Cancel>
                                             <Button variant="soft" color="gray">
-                                                Отмена
+                                                {t('general.cancel')}
                                             </Button>
                                         </AlertDialog.Cancel>
                                         <AlertDialog.Action>
                                             <Button onClick={() => showNextFact(game, String(nextFactId))}>
-                                                Далее
+                                                {t('general.next')}
                                             </Button>
                                         </AlertDialog.Action>
                                     </Flex>
@@ -144,19 +146,19 @@ export function FactResults({ players, me, game, fact }: FactResultsType) {
                         {isLastFact && (
                             <AlertDialog.Root>
                                 <AlertDialog.Trigger>
-                                    <Button color="red">Завершить квиз</Button>
+                                    <Button color="red">{t('game.fact-results.end-quiz')}</Button>
                                 </AlertDialog.Trigger>
                                 <AlertDialog.Content maxWidth="450px">
-                                    <AlertDialog.Title>Ты уверен?</AlertDialog.Title>
+                                    <AlertDialog.Title>{t('game.fact-results.next.confirm')}</AlertDialog.Title>
                                     <Flex gap="3" mt="4" justify="end">
                                         <AlertDialog.Cancel>
                                             <Button variant="soft" color="gray">
-                                                Отмена
+                                                {t('general.cancel')}
                                             </Button>
                                         </AlertDialog.Cancel>
                                         <AlertDialog.Action>
                                             <Button variant="solid" color="red" onClick={() => endQuizAndGame(game)}>
-                                                Завершить квиз
+                                                {t('game.fact-results.end-quiz')}
                                             </Button>
                                         </AlertDialog.Action>
                                     </Flex>

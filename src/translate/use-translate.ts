@@ -38,4 +38,20 @@ export function useTranslate() {
     return { t };
 }
 
+export function t<K extends keyof Translation>(
+    key: K,
+    ...args: Translation[K] extends (...args: infer P) => unknown ? P : []
+): string {
+    const { language } = useLanguageStore.getState();
+
+    const translation = translations[language];
+    if (typeof translation[key] === 'function') {
+        // Type-safe casting for function translations
+        const translationFn = translation[key] as (...args: unknown[]) => string;
+        return translationFn(...args);
+    } else {
+        return translation[key] as string;
+    }
+}
+
 export type TranslateFn = ReturnType<typeof useTranslate>['t'];

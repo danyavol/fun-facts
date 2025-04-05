@@ -6,23 +6,22 @@ import './firebase.ts';
 import './utils/time-sync.ts';
 import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
-import styles from './main.module.scss';
 
 import { QuizzesListPage } from './pages/quizzes-list/quizzes-list.page.tsx';
 import { QuizPage } from './pages/quiz/quiz.page.tsx';
 import { SignInPage } from './pages/sign-in/sign-in.page.tsx';
 import { GamePage } from './pages/game/game.page.tsx';
 import { GameBackupPage } from './pages/game-backup/game-backup.tsx';
-import * as Toast from '@radix-ui/react-toast';
-import { ToastViewport } from '@radix-ui/react-toast';
 import { AuthGuard } from './guards/auth.guard.tsx';
 import { UnAuthGuard } from './guards/unauth.guard.tsx';
 import { CreateAccountPage } from './pages/create-account/create-account-page.tsx';
+import { NotificationProvider } from './services/notification.service.tsx';
+import { ToastContainer } from './components/toast-container/toast-container.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <Theme hasBackground={false}>
-            <Toast.Provider>
+            <NotificationProvider>
                 <BrowserRouter>
                     <Routes>
                         {/* Auth Routes*/}
@@ -43,8 +42,8 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </BrowserRouter>
-                <ToastViewport className={styles.toast} />
-            </Toast.Provider>
+                <ToastContainer />
+            </NotificationProvider>
         </Theme>
     </StrictMode>
 );

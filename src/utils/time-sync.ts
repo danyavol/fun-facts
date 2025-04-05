@@ -1,4 +1,6 @@
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { NotificationService } from '../services/notification.service.tsx';
+import { t } from '../translate/use-translate.ts';
 
 const localStorageKey = 'time-offset';
 
@@ -83,6 +85,7 @@ async function getBestServerTime(): Promise<TimeSyncResponse> {
         );
         localStorage.setItem(localStorageKey, String(offset));
     } catch (e) {
+        NotificationService.showToast(t('error.time-sync-failed'), 'error', 5000);
         console.error(e);
     }
 })();

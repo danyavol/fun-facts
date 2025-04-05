@@ -95,4 +95,5 @@ export const en: Translation = {
     'game.results.table.position': '#',
     'game.results.table.name': 'Name',
     'game.results.table.score': 'Score',
+    'error.time-sync-failed': 'Failed to synchronize the time. Delays may occur in the game. Try to refresh the page',
 };

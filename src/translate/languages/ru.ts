@@ -97,6 +97,8 @@ export const ru = {
     'game.results.table.position': '№',
     'game.results.table.name': 'Имя',
     'game.results.table.score': 'Очки',
+    'error.time-sync-failed':
+        'Не удалось синхронизировать время. Возможны задержки в игре. Попробуй перезагрузить страницу',
 };
 
 export type Translation = typeof ru;

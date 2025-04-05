@@ -33,6 +33,35 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
     const myAnswer: string | null = me.givenAnswers[displayedFact.id] ?? null;
     const correctAnswerId: string | null = game.correctAnswers[displayedFact.id];
 
+    function getResultMessage() {
+        if (correctAnswerId == me.id) {
+            return (
+                <Heading align="center" size="6" color="blue">
+                    {t('game.fact-view.voting-ended.own-fact')}
+                </Heading>
+            );
+        } else if (correctAnswerId === myAnswer) {
+            return (
+                <Heading align="center" size="6" color="green">
+                    {t('game.fact-view.voting-ended.correct')}
+                </Heading>
+            );
+        } else if (myAnswer != null && correctAnswerId !== myAnswer) {
+            return (
+                <Heading align="center" size="6" color="red">
+                    {t('game.fact-view.voting-ended.incorrect')}
+                </Heading>
+            );
+        } else if (myAnswer == null) {
+            return (
+                <Heading align="center" size="6" color="gray">
+                    {/* Wrapped emoji in Text to make opacity 100% */}
+                    {t('game.fact-view.voting-ended.no-vote')} <Text color="indigo">😴</Text>
+                </Heading>
+            );
+        }
+    }
+
     return (
         <>
             <Text color="gray" weight="medium">
@@ -54,26 +83,7 @@ export function FactView({ game, players, me, displayedFact }: FactViewProps) {
                         </Text>
                     </>
                 )}
-                {votingEnded && correctAnswerId != null && (
-                    <>
-                        {correctAnswerId === myAnswer && (
-                            <Heading align="center" size="6" color="green">
-                                {t('game.fact-view.voting-ended.correct')}
-                            </Heading>
-                        )}
-                        {myAnswer != null && correctAnswerId !== myAnswer && (
-                            <Heading align="center" size="6" color="red">
-                                {t('game.fact-view.voting-ended.incorrect')}
-                            </Heading>
-                        )}
-                        {myAnswer == null && (
-                            <Heading align="center" size="6" color="gray">
-                                {/* Wrapped emoji in Text to make opacity 100% */}
-                                {t('game.fact-view.voting-ended.no-vote')} <Text color="indigo">😴</Text>
-                            </Heading>
-                        )}
-                    </>
-                )}
+                {votingEnded && correctAnswerId != null && getResultMessage()}
                 {!votingEnded && (
                     <>
                         <Heading size="4" mb="2" align="center">

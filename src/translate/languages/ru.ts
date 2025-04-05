@@ -100,6 +100,7 @@ export const ru = {
     'game.fact-view.voting-ended.hint': 'Самое время признаться чей это факт на самом деле 😉',
     'game.fact-view.voting-ended.correct': 'Правильно! 🥳',
     'game.fact-view.voting-ended.incorrect': 'Неправильно 😿',
+    'game.fact-view.voting-ended.own-fact': 'Это твой факт ✨',
     'game.fact-view.voting-ended.no-vote': 'Ты не проголосовал',
     'game.fact-view.choose-answer': 'Выбери чей это факт',
     'game.fact-view.your-own-fact-hint':

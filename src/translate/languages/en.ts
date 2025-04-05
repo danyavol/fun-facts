@@ -98,6 +98,7 @@ export const en: Translation = {
     'game.fact-view.voting-ended.hint': "It's time to confess whose fact it really is 😉",
     'game.fact-view.voting-ended.correct': 'Correct! 🥳',
     'game.fact-view.voting-ended.incorrect': 'Incorrect 😿',
+    'game.fact-view.voting-ended.own-fact': 'This is your fact ✨',
     'game.fact-view.voting-ended.no-vote': "You didn't vote",
     'game.fact-view.choose-answer': 'Choose whose fact this is',
     'game.fact-view.your-own-fact-hint':
